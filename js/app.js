@@ -1,4 +1,4 @@
-const showPersonPage = require(['/components/Page/PersonPage.js'], function(PersonPage) {
+const showPersonPage = function(PersonPage) {
     const personFromDataBase = {
         name : 'Олег',
         familyName : 'Иванов',
@@ -25,13 +25,21 @@ const showPersonPage = require(['/components/Page/PersonPage.js'], function(Pers
     page.mount(document.body);
 
     document.head.title = `${personFromDataBase.name} ${personFromDataBase.familyName}`;
-});
+};
 
 //роутинг на минималках
-const path = document.defaultView.location.pathname;
+let path = document.defaultView.location.pathname;
+
+//если проект запущен без сервера (открылся html файл)
+//то путь равен имени файла
+if(path.indexOf('file://')){
+    path = path.split('/').pop();
+}
+
 switch (path) {
     case '/':
-        showPersonPage();
+    case 'index.html':
+        require(['/components/Page/PersonPage.js'], showPersonPage);
         break;
 
     default:
