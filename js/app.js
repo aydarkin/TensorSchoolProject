@@ -35,7 +35,7 @@ const showPersonPage = function(PersonPage) {
     });
     page.mount(document.body);
 
-    document.head.title = `${personFromDataBase.name} ${personFromDataBase.familyName}`;
+    document.title = `${personFromDataBase.name} ${personFromDataBase.familyName}`;
 };
 
 //роутинг на минималках
