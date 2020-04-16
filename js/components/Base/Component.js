@@ -53,10 +53,24 @@ define(['/components/Base/Composite.js'], function(Composite) {
     
         /**
          * вызываеться при необходимости обновить компонент в верстке
-         * пока не реализован, обновляться будет по изменению состояния компонента
+         * реализован с возможными багами
          */
         update() {
             this.beforeUpdate();
+
+            //дизлайк, отписка :)
+            this.unsubscribeAll();
+            this.unsubscribeAllChiildren();
+
+            this._beforeMount();
+
+            this.container = undefined;
+            const temp = document.createElement('div');
+            temp.innerHTML = this.toString();
+            this.getContainer().replaceWith(temp.firstElementChild);
+            temp.remove();
+
+            this._afterMount();
             this.afterUpdate();
         }
     
@@ -68,6 +82,7 @@ define(['/components/Base/Composite.js'], function(Composite) {
             this.beforeUnmount();
             // отписываемся от всех событий
             this.unsubscribeAll();
+
             // уничтожаем собственный контейнер
             if (this.getContainer()) {
                 this.getContainer().remove();
@@ -102,7 +117,7 @@ define(['/components/Base/Composite.js'], function(Composite) {
     
         // прехук после монтирования
         afterMount() {
-    
+            
         }
     
         // внутренний прехук для вызова прехуков детей
@@ -219,6 +234,14 @@ define(['/components/Base/Composite.js'], function(Composite) {
                 this.unsubscribeByEvent(eventName);
             }
         }
+
+        //отписаться всем детям
+        unsubscribeAllChiildren(){
+            for (let ch in this.childrens.childrens) {
+                this.childrens.childrens[ch].unsubscribeAll();
+            }
+        }
+        
     
         // отписать всех от определенного события
         unsubscribeByEvent(eventName) {
