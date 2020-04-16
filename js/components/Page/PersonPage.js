@@ -16,6 +16,14 @@ define([
      * Страница пользователя
      */
     class PersonPage extends Component{
+        //полученный объект персоны приводим к модели пользователя
+        constructor(options) {
+            super({
+                ...options,  
+                person : factory.create(PersonModel, options.person),
+            });
+        }
+
         //сгенерированный id блока вставится в методе toString()
         render({person}) {
             return `
@@ -50,12 +58,6 @@ define([
                 </main>
                 ${this.childrens.create(Footer, {})}
             </div>`;
-        }
-
-        beforeMount() {
-            this.setState({
-                person : new PersonModel(this.options.person),
-            });
         }
     }
     return PersonPage;

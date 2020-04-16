@@ -1,3 +1,14 @@
+/**
+ * Абстрактная фабрика
+ */
+class AbstractFactory {
+    create(component, options) {
+        return new component(options || {});
+    }
+}
+
+const factory = new AbstractFactory()
+
 const showPersonPage = function(PersonPage) {
     const personFromDataBase = {
         name : 'Олег',
@@ -19,7 +30,7 @@ const showPersonPage = function(PersonPage) {
         id : '1822',
     };
 
-    const page = new PersonPage({
+    const page = factory.create(PersonPage, {
         person : personFromDataBase,
     });
     page.mount(document.body);

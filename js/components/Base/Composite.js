@@ -14,7 +14,7 @@ define(function() {
             // Создать и добавить компонент в список дочерних.
             options = (options || {})
             options.parent = this.parent;
-            const child = new childControl(options);
+            const child = factory.create(childControl, options);
             return this.add(child);
         }
     
