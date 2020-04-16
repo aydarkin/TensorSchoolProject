@@ -14,23 +14,30 @@ define(['js/components/Base/Model.js'], function(Model) {
         }
         
         /**
-         * Возращает дату в текстовом виде по формату 'Сегодня|Вчера|Позавчера в HH:MM' или 'DD.MM.YY в HH:MM'
+         * Возращает дату в текстовом виде по формату ''|Вчера|Позавчера в HH:MM или 'DD.MM.YYYY в HH:MM'
          * 'Неизвестно', если null
          * 'В сети'
          * @param {Date|null} date - дата
          */
         renderTextDate(date) {
-            let out = 'Неизвестно';
-            const now = new Date();
-            const oneDay = 24 * 60 * 60 * 1000;
-            const days = Math.floor((+now - date) / oneDay);
-            const daysStr = ['Сегодня', 'Вчера', 'Позавчера'];
+            let out = 'неизвестно';
             if (date) {
-                const timeText = `${date.getHours()}:${date.getMinutes()}`;
-                out = `Был(-а) в сети ${daysStr[days] || date.toLocaleDateString()} в ${timeText}`;
-            }
-            if(now - date < 15 * 60 * 1000){
-                out = 'В сети';
+                const now = new Date();
+                const oneDay = 24 * 60 * 60 * 1000;
+                const days = Math.floor((+now - date) / oneDay);
+                const daysStr = ['', 'вчера', 'позавчера'];
+
+                if(now - date < 15 * 60 * 1000){
+                    out = 'В сети';
+                } else {
+                    const dayText = daysStr[days] || this.renderDay(date);
+                    const yearText = date.getFullYear() == now.getFullYear() ? '' : ` ${date.getFullYear()}`;
+    
+                    const zero = date.getMinutes() < 10 ? '0' : '';
+                    const timeText = `${date.getHours()}:${zero}${date.getMinutes()}`;
+    
+                    out = `Был(а) в сети ${dayText}${yearText} в ${timeText}`;
+                }    
             }
             return out;
         }
