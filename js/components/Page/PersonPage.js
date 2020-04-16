@@ -24,12 +24,18 @@ define([
             });
         }
 
-        //сгенерированный id блока вставится в методе toString()
+        
+        /**
+         * Рендер компонента
+         * @param {Object} options
+         * @param {PersonModel} options.person
+         */
         render({person}) {
+            //сгенерированный id блока вставится в методе toString()
             return `
             <div class="wrapper">
                 ${new Header({
-                    title: 'В сети',
+                    title: person.activeString,
                     //action: () => { }, можно не передавать, т.к. есть значение по умолчанию
                     actionText: 'Редактировать',
                     idPerson : person.id,

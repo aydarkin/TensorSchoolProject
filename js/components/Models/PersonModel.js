@@ -1,39 +1,50 @@
 define(['js/components/Base/Model.js'], function(Model) {
     'use strict';
     class PersonModel extends Model {
-        
+        constructor(data) {
+            super({
+                ...data,
+                birthDay : new Date(data.birthDay),
+                active : new Date(data.active),
+            })
+        }
+
         get activeString() {
             return this.renderTextDate(this.active || null);
         }
         
         /**
-         * Возращает дату в текстовом виде по формату 'сегодня|вчера|позавчера в HH:MM' или 'DD.MM.YY в HH:MM'
-         * 'неизвестно', если null
+         * Возращает дату в текстовом виде по формату 'Сегодня|Вчера|Позавчера в HH:MM' или 'DD.MM.YY в HH:MM'
+         * 'Неизвестно', если null
+         * 'В сети'
          * @param {Date|null} date - дата
          */
         renderTextDate(date) {
-            let out = 'неизвестно';
+            let out = 'Неизвестно';
             const now = new Date();
-            const oneDay = 24 * 60 * 60 * 10000;
-            const days = Math.floor((now - date) / oneDay);
-            const daysStr = ['сегодня', 'вчера', 'позавчера'];
+            const oneDay = 24 * 60 * 60 * 1000;
+            const days = Math.floor((+now - date) / oneDay);
+            const daysStr = ['Сегодня', 'Вчера', 'Позавчера'];
             if (date) {
                 const timeText = `${date.getHours()}:${date.getMinutes()}`;
-                out = `${daysStr[days] || date.toLocaleDateString()} в ${timeText}`;
+                out = `Был(-а) в сети ${daysStr[days] || date.toLocaleDateString()} в ${timeText}`;
+            }
+            if(now - date < 15 * 60 * 1000){
+                out = 'В сети';
             }
             return out;
         }
 
         get birthDayString() {
-            return this.renderBirthDay(this.birthDay || null);
+            return this.renderDay(this.birthDay || null);
         }
 
         /** 
-         * Получает текст даты рождения без года
+         * Получает текст даты без года
          * Например: 12 апреля
          * @param {Date|null} date - дата
          */
-        renderBirthDay(date) {
+        renderDay(date) {
             let textBirthday = 'скрыто';
             if(date){
                 const months = [

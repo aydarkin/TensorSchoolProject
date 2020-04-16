@@ -25,7 +25,7 @@ const showPersonPage = function(PersonPage) {
         city : 'Уфа',
         birthDay : '1998-12-17',
         education : 'УГАТУ 2022',
-        active : '2020-03-31T21:24:00',
+        active : '2020-04-16T21:00:00',
         job : 'Студия "Эксплорер 5 - 0"',
         id : '1822',
     };
