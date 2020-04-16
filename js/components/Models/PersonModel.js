@@ -1,4 +1,4 @@
-define(['js/components/Base/Model.js'], function(Model) {
+define(['/components/Base/Model.js'], function(Model) {
     'use strict';
     class PersonModel extends Model {
         constructor(data) {
