@@ -14,7 +14,7 @@ define(['/components/Base/Model.js'], function(Model) {
         }
         
         /**
-         * Возращает дату в текстовом виде по формату ''|Вчера|Позавчера в HH:MM или 'DD.MM.YYYY в HH:MM'
+         * Возращает дату в текстовом виде по формату ''|Вчера в HH:MM или 'DD.MM.YYYY в HH:MM'
          * 'Неизвестно', если null
          * 'В сети'
          * @param {Date|null} date - дата
@@ -25,7 +25,7 @@ define(['/components/Base/Model.js'], function(Model) {
                 const now = new Date();
                 const oneDay = 24 * 60 * 60 * 1000;
                 const days = Math.floor((+now - date) / oneDay);
-                const daysStr = ['', 'вчера', 'позавчера'];
+                const daysStr = ['', 'вчера'];
 
                 if(now - date < 15 * 60 * 1000){
                     out = 'В сети';
