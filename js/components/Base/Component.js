@@ -63,12 +63,12 @@ define(['/components/Base/Composite.js'], function(Composite) {
             this.unsubscribeAllChiildren();
 
             this._beforeMount();
-
-            this.container = undefined;
+          
             const temp = document.createElement('div');
             temp.innerHTML = this.toString();
             this.getContainer().replaceWith(temp.firstElementChild);
             temp.remove();
+            this.container = undefined;
 
             this._afterMount();
             this.afterUpdate();
