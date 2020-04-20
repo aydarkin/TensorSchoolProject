@@ -458,7 +458,7 @@ body{
     align-self: flex-start;
     z-index: 10000;
     overflow: hidden;
-    
+    position: absolute;
 }
 
 .popup {
