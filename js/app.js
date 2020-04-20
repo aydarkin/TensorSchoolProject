@@ -34,7 +34,7 @@ const showPersonPage = function(PersonPage) {
     
     //     document.title = `${personFromServer.data.name}`;
     // })
-    // .catch(err => console.log(err));
+    // .catch(err => console.error(err));
 
     const page = factory.create(PersonPage, {
                 person : {
@@ -61,7 +61,7 @@ const showPersonPage = function(PersonPage) {
             });
             page.mount(document.body);
         
-            document.title = `${personFromServer.data.name}`;
+            //document.title = `${personFromServer.data.name}`;
     
 };
 
@@ -80,7 +80,7 @@ if(!document.cookie.match('sessionid=')){
     const formData = new URLSearchParams({
         'login': 'anime',
         'password': 'anime'
-    });
+    }); 
 
     fetch(DOMAIN + '/user/login', {
         method: 'POST',
