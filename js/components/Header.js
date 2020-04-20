@@ -1,6 +1,6 @@
 define([
-    '/components/Base/Component.js', 
-    '/components/TopProfile.js',
+    'js/components/Base/Component.js', 
+    'js/components/TopProfile.js',
 ], function(Component, TopProfile) {
     'use strict';
     class Header extends Component{

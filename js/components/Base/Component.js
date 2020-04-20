@@ -1,4 +1,4 @@
-define(['/components/Base/Composite.js'], function(Composite) {
+define(['js/components/Base/Composite.js'], function(Composite) {
     'use strict';
     /**
      * Компонент базовый

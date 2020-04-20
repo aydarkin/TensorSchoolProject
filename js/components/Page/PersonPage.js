@@ -1,16 +1,17 @@
 define([
-    '/components/Base/Component.js', 
-    '/components/Header.js',
-    '/components/Profile.js',
-    '/components/ProfileGallery.js',
-    '/components/ProfileWall.js',
-    '/components/ProfilePhoto.js',
-    '/components/ProfileNavigator.js',
-    '/components/ProfileMessages.js',
-    '/components/Footer.js',
-    '/components/Models/PersonModel.js',
+    'js/components/Base/Component.js', 
+    'js/components/Header.js',
+    'js/components/Profile.js',
+    'js/components/ProfileGallery.js',
+    'js/components/ProfileWall.js',
+    'js/components/ProfilePhoto.js',
+    'js/components/ProfileNavigator.js',
+    'js/components/ProfileMessages.js',
+    'js/components/Footer.js',
+    'js/components/PopupStack.js',
+    'js/components/Models/PersonModel.js',
 ], function(Component, Header, Profile, ProfileGallery, ProfileWall, ProfilePhoto, 
-            ProfileNavigator, ProfileMessages, Footer, PersonModel) {
+            ProfileNavigator, ProfileMessages, Footer, PopupStack, PersonModel) {
     'use strict';
     /**
      * Страница пользователя
@@ -63,6 +64,7 @@ define([
                     </div>
                 </main>
                 ${this.childrens.create(Footer, {})}
+                ${this.childrens.create(PopupStack, {})}
             </div>`;
         }
     }

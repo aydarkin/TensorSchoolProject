@@ -1,4 +1,4 @@
-define(['/components/Base/Component.js'], function(Component) {
+define(['js/components/Base/Component.js'], function(Component) {
     'use strict';
     class TopProfile extends Component{
         render({idPerson, name, photo}) {
