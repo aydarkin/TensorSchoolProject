@@ -9,9 +9,10 @@ define([
     'js/components/ProfileMessages.js',
     'js/components/Footer.js',
     'js/components/PopupStack.js',
+    'js/components/PopupViewPhoto.js',
     'js/components/Models/PersonModel.js',
 ], function(Component, Header, Profile, ProfileGallery, ProfileWall, ProfilePhoto, 
-            ProfileNavigator, ProfileMessages, Footer, PopupStack, PersonModel) {
+            ProfileNavigator, ProfileMessages, Footer, PopupStack, PopupViewPhoto, PersonModel) {
     'use strict';
     /**
      * Страница пользователя
@@ -33,9 +34,10 @@ define([
          */
         render({person}) {
             //сгенерированный id блока вставится в методе toString()
+            const popupStack = this.childrens.create(PopupStack, {});
             return `
             <div class="wrapper">
-                ${new Header({
+                ${this.childrens.create(Header, {
                     title: person.activeString,
                     //action: () => { }, можно не передавать, т.к. есть значение по умолчанию
                     actionText: 'Редактировать',
@@ -48,7 +50,8 @@ define([
                         ${this.childrens.create(Profile, person)/* передаем класс и параметры, Composite сам создаст и вернет объект */}
                         ${this.childrens.create(ProfileGallery, {
                             idPerson : person.id,
-                            photos: person.photos,
+                            photos : person.photos,
+                            openPhoto : this.openPhoto.bind(this, popupStack, PopupViewPhoto),
                         })}
                         ${this.childrens.create(ProfileWall, {})}
                     </div>
@@ -64,8 +67,12 @@ define([
                     </div>
                 </main>
                 ${this.childrens.create(Footer, {})}
-                ${this.childrens.create(PopupStack, {})}
+                ${popupStack}
             </div>`;
+        }
+
+        openPhoto(popupStack, popup, options) {
+            popupStack.appendPopup(popup, options);
         }
     }
     return PersonPage;

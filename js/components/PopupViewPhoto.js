@@ -4,11 +4,18 @@ define(['js/components/Base/Component.js'], function(Component) {
         constructor(options){
             super(options);
             this.setState({
-                numPhoto: '0',
-                photos: this.options.photos || [],
+                numPhoto: this.options.numPhoto,
+                photos: this.options.photos,
             });
         }
         
+        getDefaultOptions() {
+            return {
+                numPhoto: '0',
+                photos: [],
+            };
+        }
+
         render({photos}) {
             return `
                 <div class="popup popup_view-photo">
@@ -30,15 +37,25 @@ define(['js/components/Base/Component.js'], function(Component) {
             </div>`;
         }
 
+        setSize() {
+            const content = this.getContainer().querySelector('.popup__content');
+            const img = this.getContainer().querySelector('.popup__img');
+
+            content.style.width = img.offsetWidth + 'px';
+            content.style.height = img.offsetHeight + 'px';
+        }
+
         afterMount() {
             this._closeBtn = this.getContainer().querySelector('.popup__close');
-            subscribeTo(this._closeBtn, 'click', this.close.bind(this));
+            this.subscribeTo(this._closeBtn, 'click', this.close.bind(this));
 
-            this._nextBtn = this.getContainer().querySelector('.popup__navigation_next');
-            subscribeTo(this._nextBtn, 'click', this.nextPhoto.bind(this));
+            this._nextBtn = this.getContainer().querySelector('.popup__background_right');
+            this.subscribeTo(this._nextBtn, 'click', this.nextPhoto.bind(this));
 
-            this._prevBtn = this.getContainer().querySelector('.popup__navigation_back');
-            subscribeTo(this._prevBtn, 'click', this.prevPhoto.bind(this));
+            this._prevBtn = this.getContainer().querySelector('.popup__background_left');
+            this.subscribeTo(this._prevBtn, 'click', this.prevPhoto.bind(this));
+
+            this.setSize();
         }
 
         close() {
@@ -46,20 +63,24 @@ define(['js/components/Base/Component.js'], function(Component) {
         }
 
         nextPhoto(){
-            setPhoto(this.state.numPhoto + 1);
+            this.setPhoto(+this.state.numPhoto + 1);
         }
 
         prevPhoto(){
-            setPhoto(this.state.numPhoto - 1);
+            this.setPhoto(+this.state.numPhoto - 1);
         }
 
         setPhoto(position) {
-            if(photos.length > 0) {
+            if(this.state.photos.length > 0) {
+                if(position < 0){
+                    position = this.state.photos.length - 1;
+                }
                 this.setState({
-                    numPhoto: (position % photos.length).toString(),
+                    numPhoto: (+position % this.state.photos.length).toString(),
                 });
             }
             this.update();
+            this.setSize();
         }
     
     }
