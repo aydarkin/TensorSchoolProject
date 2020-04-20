@@ -4,16 +4,16 @@ define(['js/components/Base/Model.js'], function(Model) {
         constructor(data) {
             super({
                 id : data.id,
-                name : data.data.data.name,
-                description : data.data.data.description,
-                photos : data.data.data.photos,
+                name : data.data.name,
+                description : data.data.description,
+                photos : data.data.photos,
                 avatar : data.computed_data.photo_ref,
-                civilStatus : data.data.data.family_state,
-                city : data.data.data.city,
-                birthDate : new Date(data.data.data.birth_date),
-                education : data.data.data.education,
+                civilStatus : data.data.family_state,
+                city : data.data.city,
+                birthDate : new Date(data.data.birth_date),
+                education : data.data.education,
                 active : new Date(data.computed_data.last_activity),
-                job : data.data.data.job,
+                job : data.data.job,
             });
         }
 

@@ -40,20 +40,18 @@ const showPersonPage = function(PersonPage) {
                 person : {
                     "id": 9,
                     "data": {
-                        "data": {
-                            "job": "одмен",
-                            "city": "Уфа",
-                            "name": "Олег Макет",
-                            "education": "колледж информатики",
-                            "birth_date": "1998-07-07",
-                            "family_state": "есть сервак",
-                            photos : [
-                                        '/img/example/gallery/cat1.jpg',
-                                        '/img/example/gallery/cat2.jpg',
-                                        '/img/example/gallery/cat3.jpg',
-                                        '/img/example/gallery/cat4.jpg',
-                                    ],
-                        }
+                        "job": "одмен",
+                        "city": "Уфа",
+                        "name": "Олег Макет",
+                        "education": "колледж информатики",
+                        "birth_date": "1998-07-07",
+                        "family_state": "есть сервак",
+                        photos : [
+                                    '/img/example/gallery/cat1.jpg',
+                                    '/img/example/gallery/cat2.jpg',
+                                    '/img/example/gallery/cat3.jpg',
+                                    '/img/example/gallery/cat4.jpg',
+                                ],
                     },
                     "computed_data": {
                         "last_activity": "2020-04-20T19:29:59.086598",
