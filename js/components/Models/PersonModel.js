@@ -1,12 +1,20 @@
-define(['/components/Base/Model.js'], function(Model) {
+define(['js/components/Base/Model.js'], function(Model) {
     'use strict';
     class PersonModel extends Model {
         constructor(data) {
             super({
-                ...data,
-                birthDay : new Date(data.birthDay),
-                active : new Date(data.active),
-            })
+                id : data.id,
+                name : data.data.name,
+                description : data.data.description,
+                photos : data.data.photos,
+                avatar : data.computed_data.photo_ref,
+                civilStatus : data.data.family_state,
+                city : data.data.city,
+                birthDate : new Date(data.data.birth_date),
+                education : data.data.education,
+                active : new Date(data.computed_data.last_activity),
+                job : data.data.job,
+            });
         }
 
         get activeString() {
@@ -73,12 +81,16 @@ define(['/components/Base/Model.js'], function(Model) {
             return textBirthday;
         }
 
+        get fullYears(){
+            return this.renderFullYears(this.birthDay);
+        }
+
         /**
          * Получает полное количество лет
          * если даты рождения нет, то пустая строка
          */
-        get fullYears(){
-            if(this.birthDay){
+        renderFullYears(date) {
+            if(date){
                 const now = new Date();
                 let years = now.getFullYear() - date.getFullYear();
                 if(now.getMonth() < date.getMonth()
