@@ -9,33 +9,33 @@ class AbstractFactory {
 
 const factory = new AbstractFactory()
 
+const DOMAIN = 'http://tensor-school.herokuapp.com';
+
 const showPersonPage = function(PersonPage) {
-    const personFromDataBase = {
-        name : 'Олег',
-        familyName : 'Иванов',
-        description : 'волк волку волк',
-        photos : [
+    //получаем данные с сервера
+    fetch(DOMAIN + 'user/current')
+    .then(responce => responce.json()) //ждем ответ сервера
+    .then(result => { //ждем обработку json
+        const personFromServer = result;
+    
+        //временно, пока сервер не будет присылать коллекцию фото пользователя
+        personFromServer.data.photos = [
             '/img/example/gallery/cat1.jpg',
             '/img/example/gallery/cat2.jpg',
             '/img/example/gallery/cat3.jpg',
             '/img/example/gallery/cat4.jpg',
-        ],
-        avatar : '/img/example/user_photo.png',
-        civilStatus : 'в поиске',
-        city : 'Уфа',
-        birthDay : '1998-12-17',
-        education : 'УГАТУ 2022',
-        active : '2020-04-16T21:00:00',
-        job : 'Студия "Эксплорер 5 - 0"',
-        id : '1822',
-    };
-
-    const page = factory.create(PersonPage, {
-        person : personFromDataBase,
-    });
-    page.mount(document.body);
-
-    document.title = `${personFromDataBase.name} ${personFromDataBase.familyName}`;
+        ];
+    
+    
+        const page = factory.create(PersonPage, {
+            person : personFromServer,
+        });
+        page.mount(document.body);
+    
+        document.title = `${personFromServer.data.name}`;
+    })
+    .catch(err => console.log(err));
+    
 };
 
 //роутинг на минималках
@@ -47,12 +47,38 @@ if(path.indexOf('file://')){
     path = path.split('/').pop();
 }
 
-switch (path) {
-    case '/':
-    case 'index.html':
-        require(['/components/Page/PersonPage.js'], showPersonPage);
-        break;
+//временно, авторизация
+if(!document.cookie.match('sessionid=')){
+    //данные авторизации
+    const formData = new URLSearchParams({
+        'login': 'anime',
+        'password': 'anime'
+    });
 
-    default:
-        break;
+    fetch(DOMAIN + '/user/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString()
+    }).then(
+        res => {
+            if(res.status == 200){
+                console.log('Авторизация прошла успешно');
+                //Основная работа программы
+                switch (path) {
+                    case '/':
+                    case 'index.html':
+                        require(['js/components/Page/PersonPage.js'], showPersonPage);
+                        break;
+                
+                    default:
+                        break;
+                }
+            }  
+        }
+    ).catch(
+        err => console.error('Ошибка авторизации: ', err)
+    );
 }
+
