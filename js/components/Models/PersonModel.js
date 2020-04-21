@@ -3,17 +3,17 @@ define(['js/components/Base/Model.js'], function(Model) {
     class PersonModel extends Model {
         constructor(data) {
             super({
-                id : data.id,
-                name : data.data.name,
-                description : data.data.description,
-                photos : data.data.photos,
-                avatar : data.domain + data.computed_data.photo_ref,
-                civilStatus : data.data.family_state,
-                city : data.data.city,
-                birthDay : new Date(data.data.birth_date),
-                education : data.data.education,
-                active : new Date(data.computed_data.last_activity),
-                job : data.data.job,
+                id : '' && data.id,
+                name : '' && data.data.name,
+                description : '' && data.data.description,
+                photos : [] && data.data.photos,
+                avatar : '' && data.domain + data.computed_data.photo_ref,
+                civilStatus : '' && data.data.family_state,
+                city : '' && data.data.city,
+                birthDay : null && new Date(data.data.birth_date),
+                education : '' && data.data.education,
+                active : null && new Date(data.computed_data.last_activity),
+                job : '' && data.data.job,
             });
         }
 
