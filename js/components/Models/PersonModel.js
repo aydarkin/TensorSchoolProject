@@ -17,6 +17,16 @@ define(['js/components/Base/Model.js'], function(Model) {
             });
         }
 
+        /**
+         * Возвращает дату для подстановки в input
+         * формат YYYY-mm-dd
+         * @param {Date} date 
+         */
+        renderInputDate(date) {
+            return `${date.getFullYear()-date.getMonth()-date.getDate()}`;
+        }
+
+
         get activeString() {
             return this.renderTextDate(this.active || null);
         }
@@ -38,7 +48,7 @@ define(['js/components/Base/Model.js'], function(Model) {
                 if(now - date < 15 * 60 * 1000){
                     out = 'В сети';
                 } else {
-                    const dayText = daysStr[days] || this.renderDay(date);
+                    const dayText = daysStr[days] || this.renderDate(date);
                     const yearText = date.getFullYear() == now.getFullYear() ? '' : ` ${date.getFullYear()}`;
     
                     const zero = date.getMinutes() < 10 ? '0' : '';
