@@ -23,7 +23,7 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {Date} date 
          */
         renderInputDate(date) {
-            return `${date.getFullYear()-date.getMonth()-date.getDate()}`;
+            return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
         }
 
 
