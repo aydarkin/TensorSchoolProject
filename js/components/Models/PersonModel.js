@@ -19,9 +19,9 @@ define(['js/components/Base/Model.js'], function(Model) {
                 avatar : (data.computed_data.photo_ref ? (data.domain || '') + data.computed_data.photo_ref : '/img/ui/empty_photo.png'),
                 civilStatus : data.data.family_state  || '',
                 city : data.data.city  || '',
-                birthDay : new Date(data.data.birth_date)  || '',
+                birthDay : new Date(data.data.birth_date) || '',
                 education : data.data.education  || '',
-                active : new Date(data.computed_data.last_activity)  || '',
+                active : new Date(+new Date(data.computed_data.last_activity) - (new Date().getTimezoneOffset() * 60 * 1000))  || '',
                 job : data.data.job  || '',
             });
         }
