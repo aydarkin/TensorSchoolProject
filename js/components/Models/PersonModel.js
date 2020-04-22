@@ -59,9 +59,10 @@ define(['js/components/Base/Model.js'], function(Model) {
                 } else {
                     const dayText = daysStr[days] ?? this.renderDay(date);
                     const yearText = date.getFullYear() == now.getFullYear() ? '' : ` ${date.getFullYear()} `;
-    
-                    const zero = date.getMinutes() < 10 ? '0' : '';
-                    const timeText = `${date.getHours()}:${zero}${date.getMinutes()}`;
+                    
+                    const zeroHour = date.getHours() < 10 ? '0' : '';
+                    const zeroMinute = date.getMinutes() < 10 ? '0' : '';
+                    const timeText = `${zeroHour}${date.getHours()}:${zeroMinute}${date.getMinutes()}`;
     
                     out = `Был(а) в сети ${dayText}${yearText}в ${timeText}`;
                 }    
