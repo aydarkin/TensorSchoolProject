@@ -22,8 +22,12 @@ define([
         constructor(options) {
             super({
                 ...options,  
-                person : factory.create(PersonModel, options.person),
+                person : factory.create(PersonModel, {
+                    ...options.person,
+                    domain : options.domain,
+                }),
             });
+            document.title = `${options.person.name ?? document.title}`;
         }
 
         
@@ -47,7 +51,10 @@ define([
                 })}
                 <main class="content content_profile">
                     <div class="content__left">
-                        ${this.childrens.create(Profile, person)/* передаем класс и параметры, Composite сам создаст и вернет объект */}
+                        ${this.childrens.create(Profile, { /* передаем класс и параметры, Composite сам создаст и вернет объект */
+                            person : person,
+                            domain : this.options.domain,
+                        })}
                         ${this.childrens.create(ProfileGallery, {
                             idPerson : person.id,
                             photos : person.photos,
