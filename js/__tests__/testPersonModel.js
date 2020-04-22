@@ -28,13 +28,13 @@ define(['js/components/Models/PersonModel.js'], function(PersonModel) {
                     // Arrange
                     let person = createPersonModel({
                         computed_data : {
-                            last_activity : '1975-03-04T23:02:14'
+                            last_activity : '1975-03-04T18:02:14'
                         }
                     });
                     
                     // Act
                     let result = person.activeString;
-    
+                    
                     // Assert
                     assert.equal(result, 'Был(а) в сети 4 марта 1975 в 23:02');
                 });
@@ -54,10 +54,11 @@ define(['js/components/Models/PersonModel.js'], function(PersonModel) {
                 it('Выводит дату активности сегодня (раннее 15 минут)', function() {
                     // Arrange
                     const now = new Date();
-                    const beforeNow =  new Date(now - (20 * 60 * 1000));
+                    const beforeNow =  new Date(now - (25 * 60 * 1000));
                     let person = createPersonModel({
                         computed_data : {
-                            last_activity : beforeNow,
+                            //передаем время по гринвичу
+                            last_activity : new Date(+beforeNow + (new Date().getTimezoneOffset() * 60 * 1000)),
                         }
                     });
 
@@ -76,7 +77,8 @@ define(['js/components/Models/PersonModel.js'], function(PersonModel) {
                     const beforeNow =  new Date(now - (24 * 60 * 60 * 1000));
                     let person = createPersonModel({
                         computed_data : {
-                            last_activity : beforeNow,
+                            //передаем время по гринвичу
+                            last_activity : new Date(+beforeNow + (new Date().getTimezoneOffset() * 60 * 1000)), 
                         }
                     });
 
