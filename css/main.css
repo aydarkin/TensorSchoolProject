@@ -202,6 +202,7 @@ body{
 .profile-photos__photo {
     height: 144px;
     width: 144px;
+    margin: 0 2px;
     border-radius: 4px;
     overflow: hidden;
     cursor: pointer;
@@ -568,4 +569,83 @@ body{
     object-fit: scale-down;
     max-width: 100%;
     max-height: 100%;
+}
+
+/* Блок авторизации */
+.content_auth {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+.auth {
+    padding: 32px;
+    min-width: 300px;
+}
+
+.auth__title {
+    font-size: 2em;
+}
+
+.auth__content {
+    display: grid;
+    align-items: baseline;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr 2fr;
+    margin: 32px 0 0;
+}
+
+.auth__label {
+    grid-column: 1;
+}
+
+.auth__login,
+.auth__password {
+    grid-column: 2;
+    margin: 8px 0;
+    padding: 4px;
+
+    border: 1px solid #395a80;
+    border-radius: 2px;
+}
+
+.auth__buttons {
+    align-self: flex-end;
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+}
+
+.auth__sign-in,
+.auth__sign-up {
+    text-align: center;
+    width: 96px;
+    margin: 0 16px;
+
+    padding: .5em 1em;
+    border: 1px solid #4a76a8;
+    border-radius: 24px;
+
+    transition: .3s;
+    cursor: pointer;
+    user-select: none;
+    box-sizing: content-box;
+}
+
+.auth__sign-in,
+.auth__sign-up {
+    background-color: #4a76a8;
+    color: white;
+}
+
+.auth__sign-in:hover,
+.auth__sign-up:hover {
+    background-color: #406590;
+}
+
+.auth__sign-in:active,
+.auth__sign-up:active {
+    outline: none;
 }

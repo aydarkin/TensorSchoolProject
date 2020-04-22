@@ -31,15 +31,21 @@ const showPersonPage = function(PersonPage) {
         const page = factory.create(PersonPage, {
             person : { 
                 ...personFromServer,
-                domain : DOMAIN,
             },
+            domain : DOMAIN,
         });
         page.mount(document.body);
-    
-        document.title = `${personFromServer.data.name}`;
+
     })
     .catch(err => console.error(err));    
 };
+
+const showAuthPage = function(AuthPage) {
+    const page = factory.create(AuthPage, {
+        domain : DOMAIN,
+    });
+    page.mount(document.body);
+}
 
 //роутинг на минималках
 let path = document.defaultView.location.pathname;
@@ -50,40 +56,18 @@ if(path.indexOf('file://')){
     path = path.split('/').pop();
 }
 
-//временно, авторизация
-if(!document.cookie.match('sessionid=')){
-    //данные авторизации
-    const formData = new URLSearchParams({
-        'login': 'anime',
-        'password': 'anime'
-    }); 
 
-    fetch(DOMAIN + '/user/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded',
-        },
-        body: formData.toString(),
-        credentials : 'include'
-    }).then(
-        res => {
-            if(res.status == 200){
-                console.log('Авторизация прошла успешно');
-                //Основная работа программы
-                switch (path) {
-                    case '/':
-                    case '':
-                    case 'index.html':
-                        require(['js/components/Page/PersonPage.js'], showPersonPage);
-                        break;
-                
-                    default:
-                        break;
-                }
-            }  
-        }
-    ).catch(
-        err => console.error('Ошибка авторизации: ', err)
-    );
+switch (path) {
+    case '/':
+    case '':
+    case 'index.html':
+        require(['js/components/Page/PersonPage.js'], showPersonPage);
+        break;
+    case 'auth.html':
+    case 'auth':
+        require(['js/components/Page/AuthPage.js'], showAuthPage);
+        break;
+    default:
+        break;
 }
 
