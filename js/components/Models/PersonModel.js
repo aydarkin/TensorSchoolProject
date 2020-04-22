@@ -2,27 +2,36 @@ define(['js/components/Base/Model.js'], function(Model) {
     'use strict';
     class PersonModel extends Model {
         constructor(data) {
+            if(!data){
+                data = {};
+            };
+            if(!data.data){
+                data.data = {};
+            };
+            if(!data.computed_data) {
+                data.computed_data = {};
+            }
             super({
                 id : data.id ?? '',
                 name : data.data.name ?? '',
-                description : data.data.description ?? '',
+                description : data.data.description  ?? '',
                 photos : data.data.photos ?? [],
-                avatar : data.domain + data.computed_data.photo_ref ?? '',
-                civilStatus : data.data.family_state ?? '',
-                city : data.data.city ?? '',
-                birthDay : new Date(data.data.birth_date) ?? '',
-                education : data.data.education ?? '',
-                active : new Date(data.computed_data.last_activity) ?? '',
-                job : data.data.job ?? '',
+                avatar : (data.domain ?? '') + data.computed_data.photo_ref  ?? '',
+                civilStatus : data.data.family_state  ?? '',
+                city : data.data.city  ?? '',
+                birthDay : new Date(data.data.birth_date)  ?? '',
+                education : data.data.education  ?? '',
+                active : new Date(data.computed_data.last_activity)  ?? '',
+                job : data.data.job  ?? '',
             });
         }
-
+        
         /**
          * Возвращает дату для подстановки в input
          * формат YYYY-mm-dd
          * @param {Date} date 
          */
-        renderInputDate(date) {
+        static renderInputDate(date) {
             return `${date.getFullYear()}-${date.getMonth() < 11 ? '0'+(date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
         }
 
@@ -43,18 +52,18 @@ define(['js/components/Base/Model.js'], function(Model) {
                 const now = new Date();
                 const oneDay = 24 * 60 * 60 * 1000;
                 const days = Math.floor((+now - date) / oneDay);
-                const daysStr = ['', 'вчера'];
+                const daysStr = ['', 'вчера '];
 
                 if(now - date < 15 * 60 * 1000){
                     out = 'В сети';
                 } else {
-                    const dayText = daysStr[days] || this.renderDate(date);
-                    const yearText = date.getFullYear() == now.getFullYear() ? '' : ` ${date.getFullYear()}`;
+                    const dayText = daysStr[days] ?? this.renderDay(date);
+                    const yearText = date.getFullYear() == now.getFullYear() ? '' : ` ${date.getFullYear()} `;
     
                     const zero = date.getMinutes() < 10 ? '0' : '';
                     const timeText = `${date.getHours()}:${zero}${date.getMinutes()}`;
     
-                    out = `Был(а) в сети ${dayText}${yearText} в ${timeText}`;
+                    out = `Был(а) в сети ${dayText}${yearText}в ${timeText}`;
                 }    
             }
             return out;
@@ -113,7 +122,7 @@ define(['js/components/Base/Model.js'], function(Model) {
         }
 
         get astrologicalSign() {
-            return renderAstrologicalSign(this.birthDay);
+            return this.renderAstrologicalSign(this.birthDay);
         }
 
         /**
@@ -124,18 +133,18 @@ define(['js/components/Base/Model.js'], function(Model) {
         renderAstrologicalSign(date) {
             if(date){
                 const astrologicalSigns = {
-                    '♈' : 'Овен', 
-                    '♉' : 'Телец',
-                    '♊' : 'Близнецы',
-                    '♋' : 'Рак',
-                    '♌' : 'Лев',
-                    '♍' : 'Дева', 
-                    '♏' : 'Весы',
-                    '⛎' : 'Скорпион',
-                    '♐' : 'Стрелец',
-                    '♑' : 'Козерог',
-                    '♒' : 'Водолей',
-                    '♓' : 'Рыбы',
+                    '♈' : 'овен', 
+                    '♉' : 'телец',
+                    '♊' : 'близнецы',
+                    '♋' : 'рак',
+                    '♌' : 'лев',
+                    '♍' : 'дева', 
+                    '♏' : 'весы',
+                    '⛎' : 'скорпион',
+                    '♐' : 'стрелец',
+                    '♑' : 'козерог',
+                    '♒' : 'водолей',
+                    '♓' : 'рыбы',
                 };
                 //в формате ММДД, М - месяц, Д - день
                 const code = (date.getMonth() + 1) * 100 + date.getDate();
