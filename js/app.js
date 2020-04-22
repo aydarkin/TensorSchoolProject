@@ -15,8 +15,17 @@ const showPersonPage = function(PersonPage) {
     //получаем данные с сервера
     
     fetch(DOMAIN + '/user/current', { credentials: 'include'})
-    .then(responce => responce.json()) //ждем ответ сервера
-    .then(result => { //ждем обработку json
+    .then(
+        responce => {
+            if(responce.status == 401){
+                //переходим на страницу авторизации
+                document.location.href = '/auth.html';
+            }
+           
+            return responce.json();
+        }
+    ) 
+    .then(result => {
         const personFromServer = result;
     
         //временно, пока сервер не будет присылать коллекцию фото пользователя
@@ -37,7 +46,9 @@ const showPersonPage = function(PersonPage) {
         page.mount(document.body);
 
     })
-    .catch(err => console.error(err));    
+    .catch((err) => {
+        console.log(err);
+    });    
 };
 
 const showAuthPage = function(AuthPage) {
