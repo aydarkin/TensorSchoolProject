@@ -12,8 +12,6 @@ const factory = new AbstractFactory()
 const DOMAIN = 'http://tensor-school.herokuapp.com';
 
 const showPersonPage = function(PersonPage) {
-    //получаем данные с сервера
-    
     fetch(DOMAIN + '/user/current', { credentials: 'include'})
     .then(
         responce => {
@@ -25,23 +23,12 @@ const showPersonPage = function(PersonPage) {
             return responce.json();
         }
     ) 
-    .then(result => {
-        const personFromServer = result;
-    
-        //временно, пока сервер не будет присылать коллекцию фото пользователя
-        personFromServer.data.photos = [
-            '/img/example/gallery/cat1.jpg',
-            '/img/example/gallery/cat2.jpg',
-            '/img/example/gallery/cat3.jpg',
-            '/img/example/gallery/cat4.jpg',
-        ];
-    
-    
+    .then(result => {    
         const page = factory.create(PersonPage, {
-            person : { 
-                ...personFromServer,
-            },
-            domain : DOMAIN,
+            person: result,
+            domain: DOMAIN,
+            currentId: result.id,
+            isMyPage: true,
         });
         page.mount(document.body);
 
@@ -51,11 +38,67 @@ const showPersonPage = function(PersonPage) {
     });    
 };
 
+const showAnothePersonPage = function(PersonPage) {
+    let currentId;
+    fetch(DOMAIN + '/user/current', { credentials: 'include'})
+    .then(
+        responce => {
+            if(responce.status == 401){
+                //переходим на страницу авторизации
+                document.location.href = '/auth.html';
+            }
+            return responce.json();
+        }
+    )
+    .then(result => {
+        currentId = result.id;
+        const id = document.location.pathname.split('/').pop();
+        return fetch(DOMAIN + '/user/read/' + id, { credentials: 'include'})
+    })
+    .then(result => result.json())
+    .then(result => {  
+        const page = factory.create(PersonPage, {
+            person : result,
+            domain : DOMAIN,
+            currentId : result.id,
+        });
+        page.mount(document.body);
+
+    })
+    .catch((err) => {
+        console.log(err);
+    });    
+}
+
 const showAuthPage = function(AuthPage) {
     const page = factory.create(AuthPage, {
         domain : DOMAIN,
     });
     page.mount(document.body);
+}
+
+const showMessagesPage = function(MessagesPage) {
+    fetch(DOMAIN + '/user/current', { credentials: 'include'})
+    .then(
+        responce => {
+            if(responce.status == 401){
+                //переходим на страницу авторизации
+                document.location.href = '/auth.html';
+            }         
+            return responce.json();
+        }
+    ) 
+    .then(result => {
+        const page = factory.create(MessagesPage, {
+            person : result,
+            domain : DOMAIN,
+        });
+        page.mount(document.body);
+
+    })
+    .catch((err) => {
+        console.log(err);
+    });    
 }
 
 //роутинг на минималках
@@ -68,17 +111,26 @@ if(path.indexOf('file://')){
 }
 
 
-switch (path) {
-    case '/':
-    case '':
-    case 'index.html':
+switch (true) {
+    case path == '/':
+    case path == '':
+    case path == 'index.html':
         require(['js/components/Page/PersonPage.js'], showPersonPage);
         break;
-    case 'auth.html':
-    case 'auth':
+    case path == 'auth.html':
+    case path == 'auth':
         require(['js/components/Page/AuthPage.js'], showAuthPage);
         break;
+    case path == 'im.html':
+    case path == 'im':
+        require(['js/components/Page/MessagesPage.js'], showMessagesPage);
+        break;
+    case document.location.pathname.search('user/') > -1:
+        require(['js/components/Page/PersonPage.js'], showAnothePersonPage);
+        break;
     default:
+        document.location = '/'
         break;
 }
+
 
