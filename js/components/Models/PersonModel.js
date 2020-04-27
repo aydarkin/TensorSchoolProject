@@ -12,6 +12,7 @@ define(['js/components/Base/Model.js'], function(Model) {
                 data.computed_data = {};
             }
             super({
+                domain : data.domain || '',
                 id : data.id || '',
                 name : data.data.name || '',
                 description : data.data.description  || '',
@@ -23,7 +24,7 @@ define(['js/components/Base/Model.js'], function(Model) {
                 education : data.data.education  || '',
                 active : new Date(+new Date(data.computed_data.last_activity) - (new Date().getTimezoneOffset() * 60 * 1000))  || '',
                 job : data.data.job  || '',
-            });
+            });            
         }
         
         /**
@@ -173,6 +174,154 @@ define(['js/components/Base/Model.js'], function(Model) {
             return '';
         }
 
+        /**
+         * Получить список фотографий
+         * @param {Number} id 
+         * @returns {Array}
+         */
+        async getPhotosAsync(id = this.id) {
+            const responce = await fetch(this.domain + '/photo/list/' + id, { credentials: 'include'});
+            if(responce.status >= 200 && responce.status < 300){
+                const result = await responce.json();
+                const photos = result.photos.map((photo) => { return this.domain + photo.photo_ref });
+                return photos;
+            }
+            throw new Error('Сервер выдал ошибку:' + responce.status);
+        }
+
+        /**
+         * Получить список сообщений от пользователя
+         * @param {Number} id - id отправителя
+         */
+        async getMessagesAsync(id) {
+            const responce = await fetch(this.domain + '/message/list/' + id, { credentials: 'include'});
+            if(responce.status >= 200 && responce.status < 300){
+                const result = await responce.json();
+                result.messages.forEach(mes => {
+                    mes.author = JSON.parse(mes.author.replace(new RegExp("'", 'g'), '"'));
+                });
+                result.messages = result.messages.reverse();
+                return result;
+            }
+            throw new Error('Сервер выдал ошибку:' + responce.status);
+        } 
+
+        /**
+         * Получить список друзей
+         * @param {Number} page 
+         * @param {Number} pageSize 
+         */
+        async getFriendsAsync(page = 0, pageSize = 30) {
+            const params = new URLSearchParams({
+                page : page,
+                pageSize : pageSize,
+            })
+
+            const responce = await fetch(this.domain + '/user_link/list?' + params, { 
+                credentials: 'include',
+            });
+            if(responce.status >= 200 && responce.status < 300){
+                const result = await responce.json();
+                //хочется Promise.map
+                const friends = await Promise.all(result.messages.map(async (user) => {
+                    const res = await this.getUser(user.user_id);
+                    return res;
+                }));
+                
+                return friends;
+            }
+            throw new Error('Сервер выдал ошибку:' + responce.status);
+        }
+
+        /**
+         * Получить информацию о пользователе
+         * @param {Number} id - id получаемого пользователя
+         */
+        async getUser(id) {
+            const responce = await fetch(this.domain + '/user/read/' + id, {
+                credentials: 'include'
+            });
+            return await responce.json();
+        }
+        
+        /**
+         * Получить информацию о пользователе в виде объекта PersonModel
+         * @param {Number} id - id получаемого пользователя
+         * @returns {PersonModel}
+         */
+        async getPerson(id) {
+            const personData = await this.getUser(id);
+            return factory.create(PersonModel, {
+                ...personData,
+                domain: this.domain,
+            });
+        }
+
+        /**
+         * Отправка сообщения другому пользователю
+         * @param {Number} addresseeId - id адресата
+         * @param {string} messageText - текст сообщения
+         */
+        async sendMessage(addresseeId, messageText) {
+            const responce = await fetch(this.domain + '/message/create', {
+                method : 'POST',
+                credentials: 'include',
+                body : new URLSearchParams({
+                    author : this.id,
+                    addressee : addresseeId,
+                    message : messageText,
+                }),
+            });
+            if(responce.status >= 200 && responce.status < 300){
+                const message = await responce.json();
+                message.author = JSON.parse(message.author.replace(new RegExp("'", 'g'), '"'));
+                return message;
+            }
+        }
+
+        /**
+         * Выход пользователя из системы
+         */
+        async logout() {
+            await fetch(this.domain + '/user/logout', { credentials : 'include' });
+        }
+
+        /**
+         * Отправка обновленной информации о пользователе
+         */
+        async updateData() {
+            await fetch(this.domain + '/user/update', { 
+                method : 'POST',
+                headers: {
+                    'Content-Type' : 'application/json',
+                },
+                credentials : 'include',
+                body : JSON.stringify({
+                    name : this.name,
+                    description : this.description,
+                    birth_date : this.birthDay,
+                    city : this.city,
+                    family_state : this.civilStatus,
+                    education : this.education,
+                    job : this.job,
+                }),
+            });
+        }
+
+        /**
+         * Обновляет аватар пользователя
+         * @param {File} photo 
+         */
+        async uploadPhoto(photo) {
+            await fetch(this.domain + '/user/upload_photo', { 
+                method : 'POST',
+                headers: {
+                    'Content-Type' : 'image/png',
+                },
+                credentials : 'include',
+                body : photo,
+            });
+        }
     }
     return PersonModel;
 });
