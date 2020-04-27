@@ -15,7 +15,7 @@ define(['js/components/Base/Model.js'], function(Model) {
                 domain : data.domain || '',
                 id : data.id || '',
                 name : data.data.name || '',
-                description : data.data.description  || '',
+                status : data.data.status  || '',
                 photos : data.data.photos || [],
                 avatar : (data.computed_data.photo_ref ? (data.domain || '') + data.computed_data.photo_ref : '/img/ui/empty_photo.png'),
                 civilStatus : data.data.family_state  || '',
@@ -33,9 +33,16 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {Date} date 
          */
         static renderInputDate(date) {
-            return `${date.getFullYear()}-${date.getMonth() < 11 ? '0'+(date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
+            if(date.toString() != "Invalid Date") {
+                return `${date.getFullYear()}-${date.getMonth() < 11 ? '0'+(date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
+            } else {
+                return '';
+            }
         }
 
+        get birthDayInputDate() {
+            return PersonModel.renderInputDate(this.birthDay);
+        }
 
         get activeString() {
             return this.renderTextDate(this.active || null);
@@ -175,7 +182,7 @@ define(['js/components/Base/Model.js'], function(Model) {
         }
 
         /**
-         * Получить список фотографий
+         * Получение списка фотографий
          * @param {Number} id 
          * @returns {Array}
          */
@@ -183,14 +190,14 @@ define(['js/components/Base/Model.js'], function(Model) {
             const responce = await fetch(this.domain + '/photo/list/' + id, { credentials: 'include'});
             if(responce.status >= 200 && responce.status < 300){
                 const result = await responce.json();
-                const photos = result.photos.map((photo) => { return this.domain + photo.photo_ref });
+                const photos = result.photos.map((photo) => { return this.domain + photo.path });
                 return photos;
             }
             throw new Error('Сервер выдал ошибку:' + responce.status);
         }
 
         /**
-         * Получить список сообщений от пользователя
+         * Получение списка сообщений от пользователя
          * @param {Number} id - id отправителя
          */
         async getMessagesAsync(id) {
@@ -207,7 +214,7 @@ define(['js/components/Base/Model.js'], function(Model) {
         } 
 
         /**
-         * Получить список друзей
+         * Получение списка друзей
          * @param {Number} page 
          * @param {Number} pageSize 
          */
@@ -223,9 +230,11 @@ define(['js/components/Base/Model.js'], function(Model) {
             if(responce.status >= 200 && responce.status < 300){
                 const result = await responce.json();
                 //хочется Promise.map
-                const friends = await Promise.all(result.messages.map(async (user) => {
-                    const res = await this.getUser(user.user_id);
-                    return res;
+                const friends = [];
+                await Promise.all(result.user_links.map(async (user) => {
+                    if(user.user_to != this.id){
+                        friends.push(await this.getUser(user.user_to))
+                    }
                 }));
                 
                 return friends;
@@ -234,7 +243,7 @@ define(['js/components/Base/Model.js'], function(Model) {
         }
 
         /**
-         * Получить информацию о пользователе
+         * Получение информации о пользователе
          * @param {Number} id - id получаемого пользователя
          */
         async getUser(id) {
@@ -245,7 +254,7 @@ define(['js/components/Base/Model.js'], function(Model) {
         }
         
         /**
-         * Получить информацию о пользователе в виде объекта PersonModel
+         * Получение информации о пользователе в виде объекта PersonModel
          * @param {Number} id - id получаемого пользователя
          * @returns {PersonModel}
          */
@@ -298,7 +307,7 @@ define(['js/components/Base/Model.js'], function(Model) {
                 credentials : 'include',
                 body : JSON.stringify({
                     name : this.name,
-                    description : this.description,
+                    status : this.status,
                     birth_date : this.birthDay,
                     city : this.city,
                     family_state : this.civilStatus,
@@ -309,7 +318,7 @@ define(['js/components/Base/Model.js'], function(Model) {
         }
 
         /**
-         * Обновляет аватар пользователя
+         * Обновление аватара пользователя
          * @param {File} photo 
          */
         async uploadPhoto(photo) {
@@ -320,6 +329,38 @@ define(['js/components/Base/Model.js'], function(Model) {
                 },
                 credentials : 'include',
                 body : photo,
+            });
+        }
+
+        /**
+         * Добавление фото пользователя
+         * @param {File} photo 
+         */
+        async addPhoto(photo) {
+            await fetch(this.domain + '/photo/upload', { 
+                method : 'POST',
+                headers: {
+                    'Content-Type' : 'image/png',
+                },
+                credentials : 'include',
+                body : photo,
+            });
+        }
+
+        /**
+         * Удаление фото пользователя
+         * @param {File} photo 
+         */
+        async deletePhoto(id) {
+            await fetch(this.domain + '/photo/delete', { 
+                method : 'POST',
+                headers: {
+                    'Content-Type' : 'application/x-www-form-urlencoded',
+                },
+                credentials : 'include',
+                body : new URLSearchParams({
+                    photo_id : id,
+                }),
             });
         }
     }
