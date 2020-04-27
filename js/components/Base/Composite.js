@@ -6,7 +6,7 @@ define(function() {
     class Composite {
         constructor(options) {
             options = options || {};
-            this.childrens = {}
+            this.childrens = {};
             this.parent = options.parent;
         }
     
@@ -33,6 +33,10 @@ define(function() {
             /// получить компонент
             let child = this.childrens[id];
             return child;
+        }
+        
+        getAll() {
+            return this.childrens;
         }
     }
     return Composite;

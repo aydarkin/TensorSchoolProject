@@ -4,23 +4,27 @@ define(['js/components/Base/Component.js'], function(Component) {
         constructor(options){
             super(options);
             this.setState({
-                idPerson : this.options.idPerson,
+                person: this.options.person,
                 photos: this.options.photos,
                 openPhoto: this.options.openPhoto,
+                openGallery: this.options.openGallery,
+                isMyPage: this.options.isMyPage,
             });
         }
 
         getDefaultOptions() {
             return {
                 photos: [],
-                openPhoto: () => {},
+                openPhoto: () => { },
+                openGallery: () => { },
             };
         }
         
         render({photos}) {
             return `
             <div class="content__block profile-photos">
-                ${photos.slice(0, 5).map(photo => this.renderGalleryItem({photo})).join('\n')}
+                <div class="profile-photos__title">Фотографии</div>
+                <div class="profile-photos__content"></div>
             </div>`;
         }
 
@@ -31,20 +35,43 @@ define(['js/components/Base/Component.js'], function(Component) {
             </a>`;
         }
 
-        afterMount() {
-            this._thumbs = this.getContainer().querySelectorAll('.profile-photos__photo');
+        async afterMount() {
+            await this.loadPhotos();
             
+            this._thumbs = this.getContainer().querySelectorAll('.profile-photos__photo');
+        
             for (let index = 0; index < this._thumbs.length; index++) {
                 const thumb = this._thumbs[index];
-                this.subscribeTo(thumb, 'click', this.onClick.bind(this, index));      
-            }            
+                this.subscribeTo(thumb, 'click', this.onPhotoClick.bind(this, index));      
+            }  
+            
+            this.title = this.getContainer().querySelector('.profile-photos__title');
+            this.subscribeTo(this.title, 'click', this.onTitleClick.bind(this));
         }
 
-        onClick(index, event) {
+        async loadPhotos() {
+            this.state.photos = await this.state.person.getPhotosAsync(this.state.person.id);
+            const container = this.getContainer().querySelector('.profile-photos__content');
+            container.innerHTML = this.state.photos.slice(0, 4).map(photo => this.renderGalleryItem({photo})).join('\n');
+            return this.state.photos;
+        }
+
+        onPhotoClick(index, event) {
             event.preventDefault();
             this.state.openPhoto({
-                numPhoto : index, 
-                photos : this.state.photos
+                numPhoto: index, 
+                photos: this.state.photos
+            });
+        }
+
+        onTitleClick(event) {
+            event.stopPropagation();
+            this.state.openGallery({
+                person: this.state.person,
+                openPhoto: this.state.openPhoto,
+                photos: this.state.photos,
+                isMyPage: this.state.isMyPage,
+                updatePhotos: this.loadPhotos.bind(this),
             });
         }
     }

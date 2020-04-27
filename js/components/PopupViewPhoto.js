@@ -41,8 +41,13 @@ define(['js/components/Base/Component.js'], function(Component) {
             const content = this.getContainer().querySelector('.popup__content');
             const img = this.getContainer().querySelector('.popup__img');
 
-            content.style.width = img.offsetWidth + 'px';
-            content.style.height = img.offsetHeight + 'px';
+            //спасибо замыканиям за такие костыли :)
+            const onLoad = () => {
+                content.style.width = img.offsetWidth + 'px';
+                content.style.height = img.offsetHeight + 'px';
+                img.removeEventListener('onload', onLoad);
+            }
+            img.addEventListener('onload', onLoad)          
         }
 
         afterMount() {
