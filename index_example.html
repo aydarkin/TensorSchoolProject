@@ -15,17 +15,22 @@
                     <div class="header__title">В сети</div>
                     <div class="header__action">Редактировать</div>
                     <div class="top-profile">
-                        <div class="top-profile__name"></div>
-                        <img src="/img/example/user_photo.png" alt="" class="top-profile__img top-profile__img_round"/>
-                        <nav class="top-profile__menu">⋮</nav>
+                        <div class="top-profile__header">
+                            <div class="top-profile__name"></div>
+                            <img src="/img/example/user_photo.png" alt="" class="top-profile__img top-profile__img_round"/>
+                            <div class="top-profile__menu">⋮</div>
+                        </div>
+                        <nav class="top-profile__menu-list">
+                            <a href="#" class="top-profile__item">Выход</a>
+                        </nav>
                     </div>
+                   
                 </div>
             </header>
             <main class="content content_profile">
                 <div class="content__left">
                     <div class="content__block profile">
                         <p class="profile__title profile__title_nowrap">Олег Макет</p>
-                        
                         <div class="profile__info profile__info_short profile__info_editable">
                             <textarea name="" id="" rows="2" class="profile__description profile__description_input"></textarea>
                             <label for="value1" class="profile__label profile__label_input">День рождения</label>
@@ -173,24 +178,30 @@
 
             </footer>
         </div>
-        <!-- <div class="stack-popup">
-            <div class="popup popup_view-photo">
-                <div class="popup__background popup__background_left">
-                    <div class="popup__navigation popup__navigation_back"><</div>
-                </div>
-                <div class="popup__background popup__background_right">
-                    <div class="popup__navigation popup__navigation_next">></div>
-                </div>
+        <div class="stack-popup">
+            <!-- <div class="popup popup_gallery">
+                <div class="popup__background "></div>
                 <div class="popup__header">
                     <div class="popup__close"></div>
                 </div>
                 <div class="popup__content">
-                    <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
-                        <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
-                    </a>
+                    <div class="popup__title">Фотографии</div>
+                    <div class="popup__photos">
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                    </div>
                 </div>
-                <div class="popup__footer"></div>
-            </div>
-        </div> -->
+            </div> -->
+        </div>
     </body>
 </html>
