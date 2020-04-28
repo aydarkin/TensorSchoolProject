@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8">
+		<title>Имя Фамилия</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/normalize.css"/>
+        <link rel="stylesheet" href="css/main.css"/>
+        <script data-main = "js/app" src = "js/lib/require.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <header class="header">
+                <div class="header__content">
+                    <div class="header__title">В сети</div>
+                    <div class="header__action">Редактировать</div>
+                    <div class="top-profile">
+                        <div class="top-profile__header">
+                            <div class="top-profile__name"></div>
+                            <img src="/img/example/user_photo.png" alt="" class="top-profile__img top-profile__img_round"/>
+                            <div class="top-profile__menu">⋮</div>
+                        </div>
+                        <nav class="top-profile__menu-list">
+                            <a href="#" class="top-profile__item">Выход</a>
+                        </nav>
+                    </div>
+                   
+                </div>
+            </header>
+            <main class="content content_profile">
+                <div class="content__left">
+                    <div class="content__block profile">
+                        <p class="profile__title profile__title_nowrap">Олег Макет</p>
+                        <div class="profile__info profile__info_short profile__info_editable">
+                            <textarea name="" id="" rows="2" class="profile__description profile__description_input"></textarea>
+                            <label for="value1" class="profile__label profile__label_input">День рождения</label>
+                            <input type="date" name="" id="value1" class="profile__value profile__value_input">
+                            <label for="value2" class="profile__label profile__label_input">Город</label>
+                            <input type="text" name="" id="value2" class="profile__value profile__value_input">
+                            <label for="value3" class="profile__label profile__label_input">Семейное положение</label>
+                            <input type="text" name="" id="value3" class="profile__value profile__value_input">
+                        </div>
+                        
+                        <div class="profile__info profile__info_short">
+                            <p class="profile__description">Правки? Не сегодня</p>
+                            <p class="profile__label">День рождения</p>
+                            <p class="profile__value">21 декабря, 22 года</p>
+                            <p class="profile__label">Город</p>
+                            <p class="profile__value">Туймазы</p>
+                            <p class="profile__label">Семейное положение</p>
+                            <p class="profile__value">Дедлайны</p>
+                        </div>
+                        <div class="profile__more">Показать/скрыть подробности</div>
+                        <div class="profile__info profile__info_full"> <!-- <div class="profile__info profile__info_full profile__info_hide"> -->
+                            <p class="profile__label">Образование</p>
+                            <p class="profile__value">УГАТУ 2022</p>
+                            <p class="profile__label">Место работы</p>
+                            <p class="profile__value">Студия "Эксплорер 5 - 0"</p>
+                        </div>
+                    </div>
+                    <div class="content__block profile-photos">
+                        <a href="/img/example/gallery/cat1.jpg" target="_blank" class="profile-photos__photo">
+                            <img src="/img/example/gallery/cat1.jpg" alt="" class="profile-photos__img"/>
+                        </a>
+                        <a href="/img/example/gallery/cat2.jpg" target="_blank" class="profile-photos__photo">
+                            <img src="/img/example/gallery/cat2.jpg" alt="" class="profile-photos__img"/>
+                        </a>
+                        <a href="/img/example/gallery/cat3.jpg" target="_blank" class="profile-photos__photo">
+                            <img src="/img/example/gallery/cat3.jpg" alt="" class="profile-photos__img"/>
+                        </a>
+                        <a href="/img/example/gallery/cat4.jpg" target="_blank" class="profile-photos__photo">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="profile-photos__img"/>
+                        </a>
+
+                    </div>
+                    <div class="profile-wall">
+                        <div class="content__block post">
+                            <div class="post__header">
+                                <a href="" class="post__image">
+                                    <img src="/img/example/gallery/cat8.jpg" alt="" class="post__img">
+                                </a>
+                                <div class="post__header-info">
+                                    <a class="post__author">Заказчик Мудрый</a>
+                                    <p class="post__date">7 апреля в 04:12</p>
+                                </div>
+                                <div class="post__menu">⋮
+                                    <div class="ui-actions ui-actions_hide">
+                                        <p class="ui-actions__menu-item">Удалить</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="post__content">
+                                <p class="post__text">Когда будет макет? Держи котиков</p>
+                                <div class="thumbnails">
+                                    <a href="/img/example/gallery/cat6.jpg" target="_blank" class="thumbnails__thumb">
+                                        <img src="/img/example/gallery/cat6.jpg" alt="Картинка" class="thumbnails__thumb-img">
+                                    </a>
+                                    <a href="/img/example/gallery/cat6.jpg" target="_blank" class="thumbnails__thumb">
+                                        <img src="/img/example/gallery/cat4.jpg" alt="Картинка" class="thumbnails__thumb-img">
+                                    </a>
+                                    <a href="/img/example/gallery/cat6.jpg" target="_blank" class="thumbnails__thumb">
+                                        <img src="/img/example/gallery/cat2.jpg" alt="Картинка" class="thumbnails__thumb-img">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="post__footer"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="content__right">
+                    <div class="content__block profile-photo">
+                        <a a href="/img/example/user_photo.png" target="_blank" class="profile-photo__photo">
+                            <img src="/img/example/user_photo.png" alt="Фото пользователя" class="profile-photo__img">
+                        </a>
+                        <!-- Всякие приколюхи типа меню или кнопки лайка -->
+                    </div>
+                    <nav class="content__block profile-navigation">
+                        <a href="" class="profile-navigation__item">
+                            <img src="/img/ui/fav.png" alt="" class="profile-navigation__img profile-navigation__img_round">
+                            <p class="profile-navigation__item-name">Поклонники</p>
+                        </a>
+                        <a href="" class="profile-navigation__item">
+                            <img src="/img/ui/int.png" alt="" class="profile-navigation__img profile-navigation__img_round">
+                            <p class="profile-navigation__item-name">Интересное</p>
+                        </a>
+                        <a href="" class="profile-navigation__item">
+                            <img src="/img/ui/friends.png" alt="" class="profile-navigation__img profile-navigation__img_round">
+                            <p class="profile-navigation__item-name">Товарищи</p>
+                        </a>
+                        <a href="" class="profile-navigation__item">
+                            <img src="/img/ui/video.png" alt="" class="profile-navigation__img profile-navigation__img_round">
+                            <p class="profile-navigation__item-name">Видеотека</p>
+                        </a>
+                        <a href="" class="profile-navigation__item">
+                            <img src="/img/ui/photo.png" alt="" class="profile-navigation__img profile-navigation__img_round">
+                            <p class="profile-navigation__item-name">Фото</p>
+                        </a>
+                        <a href="" class="profile-navigation__item">
+                            <img src="/img/ui/music.png" alt="" class="profile-navigation__img profile-navigation__img_round">
+                            <p class="profile-navigation__item-name">Музыка</p>
+                        </a>
+                    </nav>
+                    <div class="content__block profile-messages">
+                        <div class="profile-messages__title">Сообщения</div>
+                        <div class="profile-messages__content">
+                            <div class="message">
+                                <img src="/img/example/gallery/cat3.jpg" alt="" class="message__img message__img_round message__img_online"/>
+                                <p class="message__author">Иван Гамаз</p>
+                                <p class="message__date">12:10</p>
+                                <div class="message__content">
+                                    <p class="message__text">Зацени мой обзор на марио. Там НЕТ ГРАФОНА!!!</p>
+                                    <div class="thumbnails"></div>
+                                </div>
+                            </div>
+                            <div class="message">
+                                <img src="/img/example/gallery/cat4.jpg" alt="" class="message__img message__img_round"/>
+                                <p class="message__author">Заказчик Мудрый</p>
+                                <p class="message__date">вчера 14:59</p>
+                                <div class="message__content">
+                                    <p class="message__text">До 3 часов скинь макет</p>
+                                    <div class="thumbnails"></div>
+                                </div>
+                            </div>
+                            <div class="message">
+                                <img src="/img/example/gallery/cat5.jpg" alt="" class="message__img message__img_round"/>
+                                <p class="message__author">Валентина Пертова</p>
+                                <p class="message__date">7 апр 18:00</p>
+                                <div class="message__content">
+                                    <p class="message__text">Олег, я так очарована вашей красотой и видением дизайна. Приглашаю на чашечку кофе в кафе. </p>
+                                    <div class="thumbnails"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="footer">
+
+            </footer>
+        </div>
+        <div class="stack-popup">
+            <!-- <div class="popup popup_gallery">
+                <div class="popup__background "></div>
+                <div class="popup__header">
+                    <div class="popup__close"></div>
+                </div>
+                <div class="popup__content">
+                    <div class="popup__title">Фотографии</div>
+                    <div class="popup__photos">
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                        <a href="/img/example/gallery/cat8.jpg" target="_blank" class="popup__image">
+                            <img src="/img/example/gallery/cat4.jpg" alt="" class="popup__img" />
+                        </a>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </body>
+</html>
