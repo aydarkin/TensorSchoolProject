@@ -270,19 +270,52 @@ body{
 /* Блок фото */
 .profile-photo {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+
     position: relative;
-    cursor: pointer;
 }
 
 .profile-photo__photo {
     max-width: 100%;
+    cursor: pointer;  
 }
 
 .profile-photo__img {
     width: 100%;
     height: auto;
+    vertical-align: bottom;
 }
 
+.profile-photo__loader {
+    opacity: 0;
+    position: absolute;
+    margin-top: -14px;
+    transition: .4s;
+}
+
+.profile-photo:hover .profile-photo__loader {
+    opacity: 1;
+}
+
+.profile-photo__label-file {
+    display: block;
+    box-sizing: border-box;
+    padding: 8px 16px;
+    color: white;
+    background-color: #4a76a8;
+    border-radius: 16px;
+    cursor: pointer;  
+}
+
+.profile-photo__label-file:hover {
+    background-color: #395a80;
+}
+
+.profile-photo__photo-file {
+    display: none;
+}
 /* Блок навигации */
 .profile-navigation {
     display: grid;

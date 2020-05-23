@@ -84,8 +84,9 @@ define([
                     </div>
                     <div class="content__right">
                         ${this.childrens.create(ProfilePhoto, {
-                            idPerson : person.id,
-                            photos: person.avatar,
+                            person: person,
+                            openPhoto: this.openPopup.bind(this, popupStack, PopupViewPhoto),
+                            isMyPage: this.state.isMyPage,
                         })}
                         ${this.childrens.create(ProfileNavigator, {
                             idPerson: person.id,
