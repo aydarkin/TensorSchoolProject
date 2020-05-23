@@ -17,14 +17,10 @@ define(['js/components/Base/Component.js'], function(Component) {
         }
 
         render({photos}) {
+            const isSingle = photos.length <= 1;
             return `
                 <div class="popup popup_view-photo">
-                <div class="popup__background popup__background_left">
-                    <div class="popup__navigation popup__navigation_back"><</div>
-                </div>
-                <div class="popup__background popup__background_right">
-                    <div class="popup__navigation popup__navigation_next">></div>
-                </div>
+                ${this.renderNavigation(isSingle)}
                 <div class="popup__header">
                     <div class="popup__close"></div>
                 </div>
@@ -35,6 +31,15 @@ define(['js/components/Base/Component.js'], function(Component) {
                 </div>
                 <div class="popup__footer"></div>
             </div>`;
+        }
+
+        renderNavigation(isSingle = false) {
+            return `<div class="popup__background popup__background_left">
+                        ${isSingle ? '' : '<div class="popup__navigation popup__navigation_back"><</div>'}
+                    </div>
+                    <div class="popup__background popup__background_right">
+                        ${isSingle ? '' : '<div class="popup__navigation popup__navigation_next">></div>'} 
+                    </div>`;
         }
 
         setSize() {
@@ -54,12 +59,13 @@ define(['js/components/Base/Component.js'], function(Component) {
             this._closeBtn = this.getContainer().querySelector('.popup__close');
             this.subscribeTo(this._closeBtn, 'click', this.close.bind(this));
 
-            this._nextBtn = this.getContainer().querySelector('.popup__background_right');
-            this.subscribeTo(this._nextBtn, 'click', this.nextPhoto.bind(this));
-
-            this._prevBtn = this.getContainer().querySelector('.popup__background_left');
-            this.subscribeTo(this._prevBtn, 'click', this.prevPhoto.bind(this));
-
+            if(this.state.photos.length >= 1) {
+                this._nextBtn = this.getContainer().querySelector('.popup__background_right');
+                this.subscribeTo(this._nextBtn, 'click', this.nextPhoto.bind(this));
+    
+                this._prevBtn = this.getContainer().querySelector('.popup__background_left');
+                this.subscribeTo(this._prevBtn, 'click', this.prevPhoto.bind(this));
+            }
             this.setSize();
         }
 
