@@ -17,16 +17,28 @@ define(['js/components/Base/Model.js'], function(Model) {
                 name : data.data.name || '',
                 status : data.data.status  || '',
                 photos : data.data.photos || [],
-                avatar : (data.computed_data.photo_ref ? (data.domain || '') + data.computed_data.photo_ref : '/img/ui/empty_photo.png'),
                 civilStatus : data.data.family_state  || '',
                 city : data.data.city  || '',
                 birthDay : new Date(data.data.birth_date) || '',
                 education : data.data.education  || '',
                 active : new Date(+new Date(data.computed_data.last_activity) - (new Date().getTimezoneOffset() * 60 * 1000))  || '',
                 job : data.data.job  || '',
-            });            
+            }); 
+            if(data.computed_data.photo_ref) {
+                this.setAvatar(data.computed_data.photo_ref || '/img/ui/empty_photo.png') 
+            }        
         }
         
+        /**
+         * Устанавливает аватар
+         * Решает проблему кэшированого аватара после обновления аватара 
+         * @param {string} relativeURL
+         */
+        setAvatar(relativeURL) {
+            const random = Math.trunc(Math.random() * 100000);
+            this.avatar = `${ this.domain}${relativeURL}?${random}`;
+        }
+
         /**
          * Возвращает дату для подстановки в input
          * формат YYYY-mm-dd
@@ -320,9 +332,10 @@ define(['js/components/Base/Model.js'], function(Model) {
         /**
          * Обновление аватара пользователя
          * @param {File} photo 
+         * @returns {string} - URL обновленного аватара
          */
         async uploadPhoto(photo) {
-            await fetch(this.domain + '/user/upload_photo', { 
+            const res = await fetch(this.domain + '/user/upload_photo', { 
                 method : 'POST',
                 headers: {
                     'Content-Type' : 'image/png',
@@ -330,6 +343,10 @@ define(['js/components/Base/Model.js'], function(Model) {
                 credentials : 'include',
                 body : photo,
             });
+            const person = await res.json();
+            this.setAvatar(person.computed_data.photo_ref);
+
+            return this.avatar;
         }
 
         /**
