@@ -38,7 +38,7 @@ define(['js/components/Base/Component.js'], function(Component) {
                 <div class="profile__info profile__info_short">
                     <p class="profile__description">${person.status}</p>
                     <p class="profile__label">День рождения</p>
-                    <p class="profile__value">${person.birthDayString}, ${person.fullYears} годиков</p>
+                    <p class="profile__value">${person.birthDayString}, ${person.fullYears} годиков ${person.astrologicalSign.sign}</p>
                     <p class="profile__label">Город</p>
                     <p class="profile__value">${person.city}</p>
                     <p class="profile__label">Семейное положение</p>
