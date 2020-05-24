@@ -248,7 +248,6 @@ body{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
 }
 
 .profile-photos__photo {
@@ -279,6 +278,8 @@ body{
 
 .profile-photo__photo {
     max-width: 100%;
+    overflow: hidden;
+    border-radius: 4px;
     cursor: pointer;  
 }
 
@@ -1056,4 +1057,5 @@ body{
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background-color: white;
 }
