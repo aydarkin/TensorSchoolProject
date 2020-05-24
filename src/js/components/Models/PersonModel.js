@@ -209,7 +209,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
             const result = await DataModule.getQuery('/message/list/' + id);
 
             result.messages.forEach(mes => {
-                mes.author = JSON.parse(mes.author.replace(new RegExp("'", 'g'), '"'));
+                mes.author = JSON.parse(mes.author.replace(new RegExp("'", 'g'), '"').replace('None', 'null'));
             });
 
             result.messages = result.messages.reverse();
