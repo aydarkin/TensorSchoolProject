@@ -83,7 +83,8 @@ define(['js/components/Base/Component.js'], function(Component) {
             this.subscribeTo(this._hideBtn, 'click', this.expand.bind(this));
         }
 
-        expand() {
+        expand(event) {
+            event.stopPropagation();
             this.setState({
                 isFull: !this.state.isFull,
             });

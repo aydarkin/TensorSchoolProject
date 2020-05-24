@@ -9,7 +9,6 @@ define([
         constructor(options) {
             super(options);
             this.setState({
-                domain : this.options.domain,
                 person : this.options.person,
                 selectedUserId : this.options.selectedUserId,
                 hasMoreMessages : false,
@@ -59,15 +58,9 @@ define([
         async mountUsers(page = 0, pageSize = 100) {
             const friends = await this.state.person.getFriendsAsync(page, pageSize);
             const children = friends.map((friend) => {
-                const person = factory.create(PersonModel, { 
-                    ...friend,
-                    domain : this.state.domain,
-                });
+                const person = factory.create(PersonModel, friend);
                 return this.childrens.create(User, {
-                    idPerson : person.id,
-                    photo : person.avatar,
-                    name : person.name,
-                    domain : person.domain,
+                    person: person,
                     action : this.mountMessages.bind(this),
                 });
             });
@@ -101,10 +94,7 @@ define([
 
             const messageData = await this.state.person.getMessagesAsync(id);
             const children = messageData.messages.map((message) => {
-                const person = factory.create(PersonModel, { 
-                    ...message.author,
-                    domain : this.state.domain,
-                });
+                const person = factory.create(PersonModel, message.author);
                 return this.childrens.create(Message, {
                     idPerson : person.id,
                     photo :  person.avatar,

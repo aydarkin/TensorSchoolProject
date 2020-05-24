@@ -13,9 +13,7 @@ define([
             return `
             <div class="wrapper">
                 <main class="content content_auth">
-                    ${this.childrens.create(Auth, {
-                        domain : this.options.domain,
-                    })}
+                    ${this.childrens.create(Auth, {})}
                 </main>
             </div>`;
         }

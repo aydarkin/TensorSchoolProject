@@ -7,13 +7,7 @@ define([
     'use strict';
     class MessagesPage extends Component {
         constructor(options) {
-            super({
-                ...options,  
-                person : factory.create(PersonModel, {
-                    ...options.person,
-                    domain : options.domain,
-                }),
-            });
+            super(options);
             this.setState({
                 selectedUserId : this.options.selectedUserId,
                 person : this.options.person,
@@ -33,15 +27,12 @@ define([
             return `
             <div class="wrapper">
                 ${this.childrens.create(Header, {
-                    idPerson : person.id,
-                    name: person.name,
-                    photo: person.avatar,
+                    person: person,
                     closeAction : person.logout.bind(person),
                 })}
                 <main class="content content_messages">
                     ${this.childrens.create(Messages, {
                         person : this.state.person,
-                        domain : this.options.domain,
                         selectedUserId : this.state.selectedUserId,
                         backAddress : this.state.backAddress,
                     })}

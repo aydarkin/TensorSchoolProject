@@ -7,6 +7,7 @@ define([
         constructor(options) {
             super(options);
             this.setState({
+                person: this.options.person,
                 title: this.options.title,
                 actionText: this.options.actionText,
                 action: this.options.action,
@@ -16,17 +17,15 @@ define([
             });
         }
         
-        render({idPerson, name, photo, closeAction}) {
+        render() {
             return `
             <header class="header">
                 <div class="header__content">
                     <div class="header__title">${this.state.title}</div>
                     <div class="header__action">${this.state.actionText}</div>
                     ${this.childrens.create(TopProfile, {
-                        idPerson : idPerson, 
-                        name : name,  
-                        photo : photo, 
-                        closeAction : closeAction,
+                        person: this.state.person,
+                        closeAction : this.state.closeAction,
                     })}
                 </div>
             </header>`;
@@ -37,6 +36,7 @@ define([
         }
         
         async actionDispatcher(event) {
+            event.stopPropagation();
             if(this.state.isMyPage && this.state.mode == 'profile') {
                 const result = await this.state.action();
                 switch (result) {

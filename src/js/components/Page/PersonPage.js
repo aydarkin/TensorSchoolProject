@@ -22,17 +22,10 @@ define([
     class PersonPage extends Component{
         //полученный объект персоны приводим к модели пользователя
         constructor(options) {
-            super({
-                ...options,  
-                person: factory.create(PersonModel, {
-                    ...options.person,
-                    domain: options.domain,
-                }),
-            });
-            if(this.options.currentId) {
-                //
-            }
+            super(options);
+            const current = this.options.currentPerson ? this.options.currentPerson : this.options.person;
             this.setState({
+                currentPerson: current,
                 person: this.options.person,
                 isMyPage : this.options.isMyPage,
             });
@@ -66,13 +59,11 @@ define([
             return `
             <div class="wrapper">
                 ${this.childrens.create(Header, {
+                    person: this.state.currentPerson,
                     title: person.activeString,
                     action: profile.changeMode.bind(profile, true),
                     actionText: 'Редактировать',
                     mode: 'profile',
-                    idPerson : person.id,
-                    name: person.name,
-                    photo: person.avatar,
                     closeAction : this.logout.bind(this),
                     isMyPage: this.state.isMyPage,
                 })}

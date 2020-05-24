@@ -9,96 +9,55 @@ class AbstractFactory {
 
 const factory = new AbstractFactory()
 
-const DOMAIN = 'http://tensor-school.herokuapp.com';
-
-const showPersonPage = function(PersonPage) {
-    fetch(DOMAIN + '/user/current', { credentials: 'include'})
-    .then(
-        responce => {
-            if(responce.status == 401){
-                //переходим на страницу авторизации
-                document.location.href = '/auth.html';
-            }
-           
-            return responce.json();
-        }
-    ) 
-    .then(result => {    
+const showPersonPage = function(PersonPage, PersonModel) {
+    PersonModel.getCurrent()
+    .then((person) => {
         const page = factory.create(PersonPage, {
-            person: result,
-            domain: DOMAIN,
-            currentId: result.id,
+            person: person,
             isMyPage: true,
         });
         page.mount(document.body);
-
     })
-    .catch((err) => {
-        console.log(err);
-    });    
+    .catch(() => {
+        //переходим на страницу авторизации
+        document.location.href = '/auth';
+    })    
 };
 
-const showAnothePersonPage = function(PersonPage) {
-    let currentId;
-    fetch(DOMAIN + '/user/current', { credentials: 'include'})
-    .then(
-        responce => {
-            if(responce.status == 401){
-                //переходим на страницу авторизации
-                document.location.href = '/auth.html';
-            }
-            return responce.json();
-        }
-    )
-    .then(result => {
-        currentId = result.id;
-        const id = document.location.pathname.split('/').pop();
-        return fetch(DOMAIN + '/user/read/' + id, { credentials: 'include'})
+const showAnothePersonPage = function(PersonPage, PersonModel) {
+    const id = document.location.pathname.split('/').pop();
+    let current;
+    PersonModel.getCurrent()
+    .then((result) => {
+        current = result;
+        return PersonModel.getPerson(id)
     })
-    .then(result => result.json())
-    .then(result => {  
+    .then((person) => {
         const page = factory.create(PersonPage, {
-            person : result,
-            domain : DOMAIN,
-            currentId : result.id,
+            person : person,
+            currentPerson : current,
         });
         page.mount(document.body);
-
-    })
-    .catch((err) => {
-        console.log(err);
-    });    
+    })   
 }
 
 const showAuthPage = function(AuthPage) {
-    const page = factory.create(AuthPage, {
-        domain : DOMAIN,
-    });
+    const page = factory.create(AuthPage, {});
     page.mount(document.body);
 }
 
-const showMessagesPage = function(MessagesPage) {
-    fetch(DOMAIN + '/user/current', { credentials: 'include'})
-    .then(
-        responce => {
-            if(responce.status == 401){
-                //переходим на страницу авторизации
-                document.location.href = '/auth.html';
-            }         
-            return responce.json();
-        }
-    ) 
-    .then(result => {
+const showMessagesPage = function(MessagesPage, PersonModel) {
+    PersonModel.getCurrent()
+    .then((person) => {
         const page = factory.create(MessagesPage, {
-            person : result,
-            domain : DOMAIN,
+            person : person,
         });
         page.mount(document.body);
-
     })
-    .catch((err) => {
-        console.log(err);
-    });    
+    .catch(() => {
+        //переходим на страницу авторизации
+        document.location.href = '/auth';
+    })
 }
 
 //роутинг на минималках
@@ -115,18 +74,18 @@ switch (true) {
     case path == '/':
     case path == '':
     case path == 'index.html':
-        require(['js/components/Page/PersonPage.js'], showPersonPage);
+        require(['js/components/Page/PersonPage.js','js/components/Models/PersonModel.js'], showPersonPage);
         break;
-    case path == 'auth.html':
     case path == 'auth':
+    case path == 'auth.html':
         require(['js/components/Page/AuthPage.js'], showAuthPage);
         break;
-    case path == 'im.html':
     case path == 'im':
-        require(['js/components/Page/MessagesPage.js'], showMessagesPage);
+    case path == 'im.html':
+        require(['js/components/Page/MessagesPage.js','js/components/Models/PersonModel.js'], showMessagesPage);
         break;
     case document.location.pathname.search('user/') > -1:
-        require(['js/components/Page/PersonPage.js'], showAnothePersonPage);
+        require(['js/components/Page/PersonPage.js','js/components/Models/PersonModel.js'], showAnothePersonPage);
         break;
     default:
         document.location = '/'

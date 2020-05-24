@@ -4,18 +4,18 @@ define(['js/components/Base/Component.js'], function(Component) {
         constructor(options) {
             super(options);
             this.setState({
-                photo : this.options.photo,
+                person: this.options.person,
                 closeAction : this.options.closeAction,
                 isMenuOpened : false,
             });
         }
 
-        render({idPerson, name, photo}) {
+        render() {
             return `
                 <div class="top-profile">
                     <div class="top-profile__header">
-                        <div class="top-profile__name">${name}</div>
-                        <img src="${photo}" alt="" class="top-profile__img top-profile__img_round"/>
+                        <div class="top-profile__name">${this.state.person.name}</div>
+                        <img src="${this.state.person.avatar}" alt="" class="top-profile__img top-profile__img_round"/>
                         <div class="top-profile__menu">⋮</div>
                     </div>
                     <nav class="top-profile__menu-list ${this.state.isMenuOpened ? '' : 'top-profile__menu-list_hide'}"> 
@@ -66,7 +66,6 @@ define(['js/components/Base/Component.js'], function(Component) {
 
         getDefaultOptions() {
             return {
-                photo: '/img/ui/empty_photo.png',
                 closeAction : () => {
                     event.preventDefault(); 
                     event.stopPropagation();

@@ -8,7 +8,6 @@ define([
             super(options);
             this.setState({
                 mode : this.options.mode,
-                domain : this.options.domain,
             });
         }
 
@@ -106,49 +105,25 @@ define([
             }
         }
 
-        authentication() {            
+        async authentication() {            
             const form = factory.create(FormData, this.getContainer().querySelector('.auth__content'));
-            fetch(this.state.domain + '/user/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type' : 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    login : form.get('login'),
-                    password : form.get('password'),
-                }),
-                credentials : 'include'
-            }).then(() => {
+            try {
+                await PersonModel.login(form.get('login'), form.get('password'));
                 document.location.href = '/';
-            });
-            
+            } catch (error) {
+                console.log(error);
+                alert('Неверный логин или пароль. Попробуйте еще раз')
+            }           
         }
 
         async registration() {            
             const form = factory.create(FormData, this.getContainer().querySelector('.auth__content'));
+            const nameInput = this.getContainer().querySelector('.auth__name');
             try {
-                const responce = await fetch(this.state.domain + '/user/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type' : 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({
-                        login : form.get('login'),
-                        password : form.get('password'),
-                    }),
-                    credentials : 'include'
-                });
-                const result = await responce.json();
-                const person = factory.create(PersonModel, {
-                    ...result,
-                    domain : this.state.domain,
-                });
-                const nameInput = this.getContainer().querySelector('.auth__name');
-                person.name = nameInput.value;
-                await person.updateData();
-                alert('Регистрация прошла успешно. Вход будет произведен автоматически');
+                await PersonModel.registration(form.get('login'), form.get('password'), nameInput.value);
                 document.location.href = '/';
             } catch (error) {
+                console.log(error);
                 alert('Произошла ошибка. Попробуйте войти вручную. Если не получилось, то зарегистрируйтесь заново')
             }
             
