@@ -1,4 +1,4 @@
-define(['js/components/Base/Model.js'], function(Model) {
+define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], function(Model, DataModule) {
     'use strict';
     class PersonModel extends Model {
         constructor(data) {
@@ -12,7 +12,6 @@ define(['js/components/Base/Model.js'], function(Model) {
                 data.computed_data = {};
             }
             super({
-                domain : data.domain || '',
                 id : data.id || '',
                 name : data.data.name || '',
                 status : data.data.status  || '',
@@ -24,9 +23,7 @@ define(['js/components/Base/Model.js'], function(Model) {
                 active : new Date(+new Date(data.computed_data.last_activity) - (new Date().getTimezoneOffset() * 60 * 1000))  || '',
                 job : data.data.job  || '',
             }); 
-            if(data.computed_data.photo_ref) {
-                this.setAvatar(data.computed_data.photo_ref || '/img/ui/empty_photo.png') 
-            }        
+            this.setAvatar(data.computed_data.photo_ref)   
         }
         
         /**
@@ -36,7 +33,7 @@ define(['js/components/Base/Model.js'], function(Model) {
          */
         setAvatar(relativeURL) {
             const random = Math.trunc(Math.random() * 100000);
-            this.avatar = `${ this.domain}${relativeURL}?${random}`;
+            this.avatar = relativeURL ? `${ DataModule.domain}${relativeURL}?${random}` : '/img/ui/empty_photo.png';
         }
 
         /**
@@ -199,13 +196,9 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @returns {Array}
          */
         async getPhotosAsync(id = this.id) {
-            const responce = await fetch(this.domain + '/photo/list/' + id, { credentials: 'include'});
-            if(responce.status >= 200 && responce.status < 300){
-                const result = await responce.json();
-                const photos = result.photos.map((photo) => { return this.domain + photo.path });
-                return photos;
-            }
-            throw new Error('Сервер выдал ошибку:' + responce.status);
+            const result = await DataModule.getQuery('/photo/list/' + id);
+            const photos = result.photos.map((photo) => { return DataModule.domain + photo.path });
+            return photos;
         }
 
         /**
@@ -213,16 +206,14 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {Number} id - id отправителя
          */
         async getMessagesAsync(id) {
-            const responce = await fetch(this.domain + '/message/list/' + id, { credentials: 'include'});
-            if(responce.status >= 200 && responce.status < 300){
-                const result = await responce.json();
-                result.messages.forEach(mes => {
-                    mes.author = JSON.parse(mes.author.replace(new RegExp("'", 'g'), '"'));
-                });
-                result.messages = result.messages.reverse();
-                return result;
-            }
-            throw new Error('Сервер выдал ошибку:' + responce.status);
+            const result = await DataModule.getQuery('/message/list/' + id);
+
+            result.messages.forEach(mes => {
+                mes.author = JSON.parse(mes.author.replace(new RegExp("'", 'g'), '"'));
+            });
+
+            result.messages = result.messages.reverse();
+            return result;
         } 
 
         /**
@@ -231,38 +222,27 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {Number} pageSize 
          */
         async getFriendsAsync(page = 0, pageSize = 30) {
-            const params = new URLSearchParams({
+            const result = await DataModule.getQuery('/user_link/list', {
                 page : page,
                 pageSize : pageSize,
-            })
-
-            const responce = await fetch(this.domain + '/user_link/list?' + params, { 
-                credentials: 'include',
             });
-            if(responce.status >= 200 && responce.status < 300){
-                const result = await responce.json();
-                //хочется Promise.map
-                const friends = [];
-                await Promise.all(result.user_links.map(async (user) => {
-                    if(user.user_to != this.id){
-                        friends.push(await this.getUser(user.user_to))
-                    }
-                }));
-                
-                return friends;
-            }
-            throw new Error('Сервер выдал ошибку:' + responce.status);
+            
+            const friends = [];
+            await Promise.all(result.user_links.map(async (user) => {
+                if(user.user_to != this.id){
+                    friends.push(await PersonModel.getUser(user.user_to))
+                }
+            }));
+            
+            return friends;
         }
 
         /**
          * Получение информации о пользователе
          * @param {Number} id - id получаемого пользователя
          */
-        async getUser(id) {
-            const responce = await fetch(this.domain + '/user/read/' + id, {
-                credentials: 'include'
-            });
-            return await responce.json();
+        static async getUser(id) {
+            return await DataModule.getQuery('/user/read/' + id);
         }
         
         /**
@@ -270,12 +250,9 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {Number} id - id получаемого пользователя
          * @returns {PersonModel}
          */
-        async getPerson(id) {
-            const personData = await this.getUser(id);
-            return factory.create(PersonModel, {
-                ...personData,
-                domain: this.domain,
-            });
+        static async getPerson(id) {
+            const personData = await PersonModel.getUser(id);
+            return factory.create(PersonModel, personData);
         }
 
         /**
@@ -284,48 +261,34 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {string} messageText - текст сообщения
          */
         async sendMessage(addresseeId, messageText) {
-            const responce = await fetch(this.domain + '/message/create', {
-                method : 'POST',
-                credentials: 'include',
-                body : new URLSearchParams({
-                    author : this.id,
-                    addressee : addresseeId,
-                    message : messageText,
-                }),
+            const message = await DataModule.postQuery('/message/create', {
+                author : this.id,
+                addressee : addresseeId,
+                message : messageText,
             });
-            if(responce.status >= 200 && responce.status < 300){
-                const message = await responce.json();
-                message.author = JSON.parse(message.author.replace(new RegExp("'", 'g'), '"'));
-                return message;
-            }
+            message.author = JSON.parse(message.author.replace(new RegExp("'", 'g'), '"'));
+            return message;
         }
 
         /**
          * Выход пользователя из системы
          */
         async logout() {
-            await fetch(this.domain + '/user/logout', { credentials : 'include' });
+            await DataModule.getQuery('/user/logout');
         }
 
         /**
          * Отправка обновленной информации о пользователе
          */
         async updateData() {
-            await fetch(this.domain + '/user/update', { 
-                method : 'POST',
-                headers: {
-                    'Content-Type' : 'application/json',
-                },
-                credentials : 'include',
-                body : JSON.stringify({
-                    name : this.name,
-                    status : this.status,
-                    birth_date : this.birthDay,
-                    city : this.city,
-                    family_state : this.civilStatus,
-                    education : this.education,
-                    job : this.job,
-                }),
+            await DataModule.jsonQuery('/user/update', {
+                name : this.name,
+                status : this.status,
+                birth_date : this.birthDay,
+                city : this.city,
+                family_state : this.civilStatus,
+                education : this.education,
+                job : this.job,
             });
         }
 
@@ -335,17 +298,8 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @returns {string} - URL обновленного аватара
          */
         async uploadPhoto(photo) {
-            const res = await fetch(this.domain + '/user/upload_photo', { 
-                method : 'POST',
-                headers: {
-                    'Content-Type' : 'image/png',
-                },
-                credentials : 'include',
-                body : photo,
-            });
-            const person = await res.json();
+            const person = await DataModule.pngQuery('/user/upload_photo', photo);
             this.setAvatar(person.computed_data.photo_ref);
-
             return this.avatar;
         }
 
@@ -354,14 +308,7 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {File} photo 
          */
         async addPhoto(photo) {
-            await fetch(this.domain + '/photo/upload', { 
-                method : 'POST',
-                headers: {
-                    'Content-Type' : 'image/png',
-                },
-                credentials : 'include',
-                body : photo,
-            });
+            await DataModule.pngQuery('/photo/upload', photo);
         }
 
         /**
@@ -369,16 +316,50 @@ define(['js/components/Base/Model.js'], function(Model) {
          * @param {File} photo 
          */
         async deletePhoto(id) {
-            await fetch(this.domain + '/photo/delete', { 
-                method : 'POST',
-                headers: {
-                    'Content-Type' : 'application/x-www-form-urlencoded',
-                },
-                credentials : 'include',
-                body : new URLSearchParams({
-                    photo_id : id,
-                }),
+            await DataModule.postQuery('/photo/delete', {
+                photo_id : id,
             });
+        }
+
+        /**
+         * Получить авторизованного пользователя
+         */
+        static async getCurrent() {
+            const data = await DataModule.getQuery('/user/current');
+            return factory.create(PersonModel, data);
+        }
+
+        /**
+         * Зарегистрировать пользователя
+         * @param {string} login 
+         * @param {string} password 
+         * @param {string} name 
+         */
+        static async registration(login, password, name) {
+            const result = await DataModule.postQuery('/user/create', {
+                login : login,
+                password : password,
+            });
+
+            const person = factory.create(PersonModel, result);
+            person.name = name;
+            await person.updateData();
+
+            return person;
+        }
+
+        /**
+         * Аутентификация
+         * @param {string} login 
+         * @param {string} password 
+         */
+        static async login(login, password) {
+            const result = await DataModule.postQuery('/user/login', {
+                login : login,
+                password : password,
+            });
+
+            return factory.create(PersonModel, result);
         }
     }
     return PersonModel;
