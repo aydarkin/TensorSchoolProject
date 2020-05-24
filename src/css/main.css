@@ -733,7 +733,8 @@ body{
     background-color: #406590;
 }
 
-.auth__sign:active {
+.auth__sign:active,
+.auth__sign:focus {
     outline: none;
 }
 
