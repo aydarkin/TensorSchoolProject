@@ -71,7 +71,9 @@ define([
                     <div class="content__left">
                         ${profile}
                         ${profileGallery}
-                        ${this.childrens.create(ProfileWall, {})}
+                        ${this.childrens.create(ProfileWall, {
+                            person: person,
+                        })}
                     </div>
                     <div class="content__right">
                         ${this.childrens.create(ProfilePhoto, {

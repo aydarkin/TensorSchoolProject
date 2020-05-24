@@ -214,6 +214,7 @@ body{
 
 .profile__value {
     columns: 2;
+    line-height: 1.2;
 }
 
 .profile__value_input,
@@ -325,6 +326,12 @@ body{
     align-items: center;
 }
 
+@media screen and (max-width: 768px) {
+    .profile-navigation {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
 .profile-navigation__item {
     display: flex;
     flex-direction: column;
@@ -341,10 +348,8 @@ body{
 }
 
 .profile-navigation__img {
-    border: 1px solid rgb(182, 182, 182);
-    background-color: rgb(245, 245, 245);
     padding: 8px;
-    border-radius: 50%;
+    border-radius: 8px;
     margin: 8px 0;
     transition: .2s;
 }
@@ -454,6 +459,8 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    overflow: hidden;
 }
 
 .post__header {
@@ -490,12 +497,10 @@ body{
     text-overflow: ellipsis;
     white-space: nowrap;
     margin: 2px 0;
-    cursor: pointer;
 }
 
 .post__author {
-    color: cornflowerblue;
-    font-weight: 600;
+    color: #4a76a8;
 }
 
 .post__date {
@@ -503,27 +508,16 @@ body{
     color: rgb(114, 114, 114);
 }
 
-.post__author:hover,
-.post__date:hover {
-    text-decoration: underline;
-}
-
-.post__menu {
-    text-align: center;
+.post__delete {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
     cursor: pointer;
-    font-size: 24px;
-}
-
-.ui-actions{
-    display: flex;
-}
-
-.ui-actions_hide{
-    display: none
 }
 
 .post__content {
     width: 100%;
+    line-height: normal;
 }
 
 /* Прикрепленные изображения (эскизы) */
