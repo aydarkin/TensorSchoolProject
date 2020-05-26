@@ -11,7 +11,6 @@ define([
                 title: this.options.title,
                 actionText: this.options.actionText,
                 action: this.options.action,
-                closeAction: this.options.closeAction,
                 isMyPage: this.options.isMyPage,
                 mode:  this.options.mode,
             });
@@ -25,7 +24,7 @@ define([
                     <div class="header__action">${this.state.actionText}</div>
                     ${this.childrens.create(TopProfile, {
                         person: this.state.person,
-                        closeAction : this.state.closeAction,
+                        closeAction : this.logout.bind(this),
                     })}
                 </div>
             </header>`;
@@ -33,6 +32,11 @@ define([
 
         afterMount() {
             this.subscribeTo(this.getContainer().querySelector('.header__action'), 'click', this.actionDispatcher.bind(this));
+        }
+
+        async logout() {
+            await this.state.person.logout();
+            document.location = '/auth';
         }
         
         async actionDispatcher(event) {
