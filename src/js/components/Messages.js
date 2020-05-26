@@ -56,13 +56,14 @@ define([
         }
 
         async mountUsers(page = 0, pageSize = 100) {
-            const friends = await this.state.person.getFriendsAsync(page, pageSize);
-            const children = friends.map((friend) => {
-                const person = factory.create(PersonModel, friend);
-                return this.childrens.create(User, {
-                    person: person,
+            //получаем список связей
+            const links = await this.state.person.getLinksAsync(page, pageSize);
+            const children = [];
+            links.forEach((link) => {
+                children.push(this.childrens.create(User, {
+                    person: link.person,
                     action : this.mountMessages.bind(this),
-                });
+                }));
             });
 
             const userList = this.getContainer().querySelector('.messages__user-list');
