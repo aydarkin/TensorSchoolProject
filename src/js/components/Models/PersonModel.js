@@ -217,24 +217,64 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
         } 
 
         /**
-         * Получение списка друзей
+         * Получение списка связей
          * @param {Number} page 
          * @param {Number} pageSize 
          */
-        async getFriendsAsync(page = 0, pageSize = 30) {
+        async getLinksAsync(page = 0, pageSize = 30) {
             const result = await DataModule.getQuery('/user_link/list', {
                 page : page,
                 pageSize : pageSize,
             });
             
-            const friends = [];
-            await Promise.all(result.user_links.map(async (user) => {
-                if(user.user_to != this.id){
-                    friends.push(await PersonModel.getUser(user.user_to))
-                }
-            }));
+            const from = new Set();
+            const to = new Set();
+            result.user_links.forEach((user) => {
+                from.add(user.user_from);
+                to.add(user.user_to);
+            });
+
+            const intersection = [...from].filter((id) => to.has(id));
+            const onlyFrom = [...from].filter((id) => !to.has(id));
+            const onlyTo = [...to].filter((id) => !from.has(id));
+
+            const links = [];
+
+            //эвент-луп прости меня
+            await Promise.all([
+                Promise.all(intersection.map(async (id) => {
+                    return links.push({
+                        person: await PersonModel.getPerson(id),
+                        type: 'friend',
+                    });
+                })),
+                Promise.all(onlyFrom.map(async (id) => {
+                    return links.push({
+                        person: await PersonModel.getPerson(id),
+                        type: 'incoming',
+                    });
+                })),
+                Promise.all(onlyTo.map(async (id) => {
+                    return links.push({
+                        person: await PersonModel.getPerson(id),
+                        type: 'outgoing',
+                    });
+                }))
+            ])
             
-            return friends;
+            return links;
+        }
+
+        /**
+         * Создание связей с другим пользователем
+         * @param {number} id 
+         * @param {string} type 
+         */
+        async createLink(id, type = 'friend') {
+            await DataModule.postQuery('/user_link/create', {
+                user: id,
+                link_type: type,
+            });
         }
 
         /**
@@ -262,9 +302,9 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          */
         async sendMessage(addresseeId, messageText) {
             const message = await DataModule.postQuery('/message/create', {
-                author : this.id,
-                addressee : addresseeId,
-                message : messageText,
+                author: this.id,
+                addressee: addresseeId,
+                message: messageText,
             });
             message.author = JSON.parse(message.author.replace(new RegExp("'", 'g'), '"'));
             return message;
