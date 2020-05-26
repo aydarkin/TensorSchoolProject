@@ -56,7 +56,7 @@ define(['js/components/Base/Component.js'], function(Component) {
                     this.messageBtn = btn;
                     this.subscribeTo(this.messageBtn, 'click', this.messageClick.bind(this));
                 }
-                if(btn.lastElementChild.textContent == "Товарищи") {
+                if(btn.lastElementChild.textContent == "Друзья") {
                     this.friendsBtn = btn;
                     this.subscribeTo(this.friendsBtn, 'click', this.friendsClick.bind(this));
                 }
