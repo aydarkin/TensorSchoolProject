@@ -1,4 +1,5 @@
-# Проект социальной сети Tensor School
+# Проект [социальной сети Tensor School](https://tensor-school-project.herokuapp.com/)
+
 ![скриншот](https://i.ibb.co/hWFpfWx/12.png)
 
 
