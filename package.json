@@ -2,9 +2,9 @@
   "name": "tensorschoolproject",
   "version": "1.0.0",
   "description": "",
-  "main": "gulpfile.js",
+  "main": "server.js",
   "scripts": {
-    "start": "server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
