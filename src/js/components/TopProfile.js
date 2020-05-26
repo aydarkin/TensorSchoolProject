@@ -6,6 +6,7 @@ define(['js/components/Base/Component.js'], function(Component) {
             this.setState({
                 person: this.options.person,
                 closeAction : this.options.closeAction,
+                openMyPage: this.options.openMyPage,
                 isMenuOpened : false,
             });
         }
@@ -19,6 +20,7 @@ define(['js/components/Base/Component.js'], function(Component) {
                         <div class="top-profile__menu">⋮</div>
                     </div>
                     <nav class="top-profile__menu-list ${this.state.isMenuOpened ? '' : 'top-profile__menu-list_hide'}"> 
+                        ${this.renderItem('Моя страница')}
                         ${this.renderItem('Выход')}
                     </nav>                        
                 </div>`;
@@ -35,6 +37,9 @@ define(['js/components/Base/Component.js'], function(Component) {
             this.subscribeTo(document, 'click', this.closeMenu.bind(this));
 
             //временный костыль, надо делать отдельным компонентом
+            //первая кнопка выпадающего меню - кнопка перехода на свою страницу
+            this.myPageBtn = this.getContainer().querySelector('.top-profile__menu-list').firstElementChild;
+            this.subscribeTo(this.myPageBtn, 'click', this.state.openMyPage);
             //последняя кнопка выпадающего меню - кнопка выход
             this.logoutBtn = this.getContainer().querySelector('.top-profile__menu-list').lastElementChild;
             this.subscribeTo(this.logoutBtn, 'click', this.state.closeAction);
@@ -66,10 +71,15 @@ define(['js/components/Base/Component.js'], function(Component) {
 
         getDefaultOptions() {
             return {
-                closeAction : () => {
+                closeAction: () => {
                     event.preventDefault(); 
                     event.stopPropagation();
                     console.warn('Действие выхода не назначено')
+                },
+                openMyPage: () => {
+                    event.preventDefault(); 
+                    event.stopPropagation();
+                    document.location = '/';
                 }
             }
         }
