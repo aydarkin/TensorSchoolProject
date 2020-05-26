@@ -42,7 +42,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          * @param {Date} date 
          */
         static renderInputDate(date) {
-            if(date.toString() != "Invalid Date") {
+            if(date && date.toString() != "Invalid Date") {
                 return `${date.getFullYear()}-${date.getMonth() < 11 ? '0'+(date.getMonth()+1) : date.getMonth()+1}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
             } else {
                 return '';
@@ -65,7 +65,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          */
         renderTextDate(date) {
             let out = 'неизвестно';
-            if (date) {
+            if (date && date.toString() != "Invalid Date") {
                 const now = new Date();
                 const oneDay = 24 * 60 * 60 * 1000;
                 const days = Math.floor((+now - date) / oneDay);
@@ -98,7 +98,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          */
         renderDay(date) {
             let textBirthday = 'скрыто';
-            if(date){
+            if(date && date.toString() != "Invalid Date"){
                 const months = [
                     'января',
                     'февраля',
@@ -127,7 +127,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          * если даты рождения нет, то пустая строка
          */
         renderFullYears(date) {
-            if(date){
+            if(date && date.toString() != "Invalid Date"){
                 const now = new Date();
                 let years = now.getFullYear() - date.getFullYear();
                 if(now.getMonth() < date.getMonth()
@@ -149,7 +149,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          * @param {Date|null} date 
          */
         renderAstrologicalSign(date) {
-            if(date){
+            if(date && date.toString() != "Invalid Date"){
                 const astrologicalSigns = {
                     '♈' : 'овен', 
                     '♉' : 'телец',

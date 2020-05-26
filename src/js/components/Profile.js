@@ -32,7 +32,10 @@ define(['js/components/Base/Component.js'], function(Component) {
         }
 
         renderView(person) {
-            const birth = `${person.birthDayString}, ${person.fullYears} годиков ${person.astrologicalSign.sign}`;
+            let fullYears = person.fullYears;
+            fullYears = fullYears ? `, ${fullYears} годиков ` : '';
+
+            const birth = `${person.birthDayString}${fullYears}${person.astrologicalSign.sign || ''}`;
             return `
             <div class="content__block profile">
                 <p class="profile__title profile__title_nowrap" title="${person.name}">${person.name}</p>                        
