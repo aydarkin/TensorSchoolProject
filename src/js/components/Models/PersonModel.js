@@ -13,12 +13,12 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
             }
             super({
                 id : data.id || '',
-                name : data.data.name || '',
-                status : data.data.status  || '',
+                name : data.data.name || data.data.first_name || data.data.firstName || '',
+                status : data.data.status  || data.data.about_self || '',
                 photos : data.data.photos || [],
                 civilStatus : data.data.family_state  || '',
                 city : data.data.city  || '',
-                birthDay : new Date(data.data.birth_date) || '',
+                birthDay : new Date(data.data.birth_date || data.data.bdate) || '',
                 education : data.data.education  || '',
                 active : new Date(+new Date(data.computed_data.last_activity) - (new Date().getTimezoneOffset() * 60 * 1000))  || '',
                 job : data.data.job  || '',
@@ -424,6 +424,15 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
             });
 
             return factory.create(PersonModel, result);
+        }
+
+        /**
+         * Получить список всех персон, с которыми можно вести диалог
+         */
+        async getAllUsers() {
+            const result = await DataModule.getQuery('/message/addressee_list');
+
+            return result.messages.map((user) => factory.create(PersonModel, user));
         }
     }
     return PersonModel;
