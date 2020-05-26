@@ -11,10 +11,11 @@ define([
     'js/components/PopupStack.js',
     'js/components/PopupViewPhoto.js',
     'js/components/PopupGallery.js',
+    'js/components/PopupFriends.js',
     'js/components/Models/PersonModel.js',
 ], function(Component, Header, Profile, ProfileGallery, ProfileWall, ProfilePhoto, 
             ProfileNavigator, ProfileMessages, Footer, PopupStack, PopupViewPhoto, 
-            PopupGallery, PersonModel) {
+            PopupGallery, PopupFriends, PersonModel) {
     'use strict';
     /**
      * Страница пользователя
@@ -64,7 +65,6 @@ define([
                     action: profile.changeMode.bind(profile, true),
                     actionText: 'Редактировать',
                     mode: 'profile',
-                    closeAction : this.logout.bind(this),
                     isMyPage: this.state.isMyPage,
                 })}
                 <main class="content content_profile">
@@ -73,6 +73,8 @@ define([
                         ${profileGallery}
                         ${this.childrens.create(ProfileWall, {
                             person: person,
+                            openPhoto: this.openPopup.bind(this, popupStack, PopupViewPhoto),
+                            isMyPage: this.state.isMyPage,
                         })}
                     </div>
                     <div class="content__right">
@@ -84,6 +86,10 @@ define([
                         ${this.childrens.create(ProfileNavigator, {
                             idPerson: person.id,
                             gallery: profileGallery,
+                            openFriends: this.openPopup.bind(this, popupStack, PopupFriends, {
+                                person: this.state.person,
+                                isMyPage: this.state.isMyPage,
+                            }),
                         })}
                         ${this.childrens.create(ProfileMessages, {})}                    
                     </div>
@@ -95,11 +101,6 @@ define([
 
         openPopup(popupStack, popup, options) {
             popupStack.appendPopup(popup, options);
-        }
-        
-        async logout() {
-            await this.state.person.logout();
-            document.location.reload();
         }
         
     }

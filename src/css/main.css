@@ -7,7 +7,7 @@ body{
 }
 
 .wrapper {
-    min-width: 320px;
+    min-width: 480px;
     max-width: 960px;
     width: 100%;
     position: relative;
@@ -94,14 +94,16 @@ body{
 
 .top-profile__menu {
     width: 24px;
+    font-weight: bold;
     text-align: center;
 }
 
 .top-profile__menu-list {
     position: absolute;
-    top: 101%;
+    top: calc(100% + 6px);
     right: 0;
     min-width: 96px;
+    padding: 4px 0;
 
     display: flex;
     flex-direction: column;
@@ -111,13 +113,39 @@ body{
     box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
 }
 
+.top-profile__menu-list::before,
+.top-profile__menu-list::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: solid transparent;
+    right: 1em;
+    bottom: 100%;
+}
+
+.top-profile__menu-list::before {
+    margin-top: -12px;
+    margin-right: -1px;
+    border-width: 6px;
+    border-bottom-color: #d3d3d3;
+}
+
+.top-profile__menu-list::after {
+    border-width: 5px;
+    margin-top: -10px;
+    border-bottom-color: white;
+}
+
 .top-profile__menu-list_hide {
     display: none;
 }
 
 .top-profile__item {
-    color: black;
-    padding: 8px 16px;
+    color: #2a5885;
+    padding: 0 1em;
+    line-height: 2em;
+    font-size: .9em;
     text-decoration: none;
     cursor: pointer;
 }
@@ -208,12 +236,12 @@ body{
 }
 
 .profile__label {
-    columns: 1;
+    grid-column: 1;
     color: rgb(172, 172, 172);
 }
 
 .profile__value {
-    columns: 2;
+    grid-column: 2;
     line-height: 1.2;
 }
 
@@ -231,10 +259,6 @@ body{
 }
 
 /* Блок галереи */
-.profile-photos {
-    min-height: 144px;
-}
-
 .profile-photos__title {
     font-size: 1.2em;
     cursor: pointer;
@@ -249,6 +273,10 @@ body{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+}
+
+.profile-photos__empty {
+    margin: 0;
 }
 
 .profile-photos__photo {
@@ -326,12 +354,6 @@ body{
     align-items: center;
 }
 
-@media screen and (max-width: 768px) {
-    .profile-navigation {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
 .profile-navigation__item {
     display: flex;
     flex-direction: column;
@@ -361,6 +383,15 @@ body{
 .profile-navigation__item-name {
     margin: 8px 0 16px;
     font-size: .9em;
+}
+
+@media screen and (max-width: 768px) {
+    .profile-navigation {
+        grid-template-columns: 1fr 1fr;
+    }
+    .profile-navigation__item-name {
+        font-size: .8em;
+    }
 }
 
 /* Блок сообщений */
@@ -454,6 +485,40 @@ body{
 }
 
 
+/* Блок добавления поста */
+.post-create__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-create__text {
+    padding: .5em 1em;
+    border: 1px solid #395a80;
+    border-radius: 4px;
+    resize: none;
+}
+
+.post-create__send {
+    color: #fff;
+    background-color: #4a76a8;
+    border-radius: 2em;
+    cursor: pointer;
+    transition: .2s;
+    border: 0;
+    margin-top: .5em;
+    max-width: 160px;
+    line-height: 2em;
+}
+
+.post-create__send:hover {
+    background-color: #395a80;
+}
+
+.post-create__send:active,
+.post-create__send:focus {
+    outline: none;
+}
+
 /* Блок поста */
 .post {
     display: flex;
@@ -495,8 +560,14 @@ body{
 .post__date {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
     margin: 2px 0;
+    text-decoration: none;
+}
+
+.post__author:hover,
+.post__date:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .post__author {
@@ -537,9 +608,11 @@ body{
 }
 
 .thumbnails__thumb-img {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    height: auto;
+
     min-height: 120px;
+    max-height: 320px;
     object-fit: cover;
 }
 
@@ -803,7 +876,8 @@ body{
     border-radius: 4px;
 }
 
-.messages .user {
+.messages .user,
+.friends .user {
     position: relative;
     display: flex;
     flex-wrap: nowrap;
@@ -823,11 +897,13 @@ body{
     background-color: #e7e8ec;
 }
 
-.messages .user:hover {
+.messages .user:hover,
+.friends .user:hover{
     background-color: #e7e8ec;
 }
 
-.messages .user__photo {
+.messages .user__photo,
+.friends .user__photo {
     width: 36px;
     height: 36px;
     border: 1px solid rgb(170, 170, 170);
@@ -838,7 +914,8 @@ body{
     flex-shrink: 0;
 }
 
-.messages .user__img {
+.messages .user__img,
+.friends .user__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -931,8 +1008,9 @@ body{
     background-color: rgb(170, 170, 170);
 }
 
-/* Блок модального окна галереи */
-.popup_gallery {
+/* Блок модального окна галереи и списка друзей */
+.popup_gallery,
+.popup_friends {
     position: fixed;
     left: 0;
     top: 0;
@@ -942,18 +1020,19 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    
+    justify-content: center; 
 }
 
-.popup_gallery .popup__background {
+.popup_gallery .popup__background,
+.popup_friends .popup__background {
     width: 100vw;
     height: 100vh;
     position: absolute;
     background-color: rgba(0, 0, 0, .9);
 }
 
-.popup_gallery .popup__close {
+.popup_gallery .popup__close,
+.popup_friends .popup__close {
     position: absolute;
     right: 0;
     top: 0;
@@ -961,11 +1040,13 @@ body{
     color: rgba(255, 255, 255, .5);
 }
 
-.popup_gallery .popup__close:hover {
+.popup_gallery .popup__close:hover,
+.popup_friends .popup__close:hover {
     color: white;
 }
 
-.popup_gallery .popup__title {
+.popup_gallery .popup__title,
+.popup_friends .popup__title {
     margin: 16px 8px;
     font-size: 2em;
 }
@@ -993,7 +1074,12 @@ body{
     display: none;
 }
 
-.popup_gallery .popup__content {
+.popup_gallery .popup__empty {
+    margin: 0;
+}
+
+.popup_gallery .popup__content,
+.popup_friends .popup__content {
     position: fixed;
     box-shadow: none;
     margin: 0;
@@ -1006,6 +1092,7 @@ body{
     padding: 16px;
     box-shadow: 0 0 4px rgba(0, 0, 0, .2);
 }
+
 .popup_gallery .popup__photos {
     display: flex;
     justify-content: flex-start;
@@ -1053,4 +1140,26 @@ body{
     height: 100%;
     object-fit: cover;
     background-color: white;
+}
+
+.popup_friends .friends {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup_friends .friends__action {
+    padding: 2px 8px;
+    margin: 0 2em;
+    border: 1px solid #4a76a8;
+    border-radius: 1em;
+    max-width: 160px;
+    text-align: center;
+    display: inline-block;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.popup_friends .friends__action:hover {
+    color: white;
+    background-color: #4a76a8;
 }

@@ -5,6 +5,7 @@ define(['js/components/Base/Component.js'], function(Component) {
             super(options);
             this.setState({
                 gallery: this.options.gallery,
+                openFriends: this.options.openFriends,
             });
         }
 
@@ -55,6 +56,10 @@ define(['js/components/Base/Component.js'], function(Component) {
                     this.messageBtn = btn;
                     this.subscribeTo(this.messageBtn, 'click', this.messageClick.bind(this));
                 }
+                if(btn.lastElementChild.textContent == "Товарищи") {
+                    this.friendsBtn = btn;
+                    this.subscribeTo(this.friendsBtn, 'click', this.friendsClick.bind(this));
+                }
 
             });
             
@@ -68,6 +73,11 @@ define(['js/components/Base/Component.js'], function(Component) {
         messageClick(event) {
             //event.preventDefault();
             //this.state.gallery.onTitleClick(event);
+        }
+
+        friendsClick(event) {
+            event.preventDefault();
+            this.state.openFriends();
         }
     }
     return ProfileNavigator;
