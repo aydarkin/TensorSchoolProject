@@ -6,8 +6,16 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
             this.setState({
                 person: this.options.person,
                 message: this.options.message,
-                image: this.options.image,
+                images: this.options.images,
+                openPhoto: this.options.openPhoto,
             });
+        }
+
+        getDefaultOptions() {
+            return {
+                images: [],
+                openPhoto: () => { },
+            };
         }
 
         render() {
@@ -17,7 +25,7 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
                                 <img src="${this.state.person.avatar}" alt="" class="post__img">
                             </a>
                             <div class="post__header-info">
-                                <a class="post__author">${this.state.person.name || 'Неизвестный отправитель'}</a>
+                                <a href="/user/${this.state.person.id}" class="post__author">${this.state.person.name || 'Неизвестный отправитель'}</a>
                                 <p class="post__date"></p>
                             </div>
                             <img class="post__delete" src="/img/ui/garbage.png" alt="Удалить">
@@ -25,17 +33,45 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
                         <div class="post__content">
                             <p class="post__text">${this.state.message || 'Пустое сообщение'}</p>
                             <div class="thumbnails">
-                                ${this.state.image ? this.renderThumb(image) : ''}
+                                ${this.state.images.length > 0 ? this.renderThumbs(this.state.images) : ''}
                             </div>
                         </div>
                         <div class="post__footer"></div>
                     </div>`;
         }
 
-        renderThumb(image) {
-            return `<a href="${image}" target="_blank" class="thumbnails__thumb">
-                        <img src="${image}" alt="Картинка" class="thumbnails__thumb-img">
-                    </a>`;
+        renderThumbs(images) {
+            return images.reduce((html, image) => {
+                switch (image) {
+                    case 'undefined':
+                    case 'null':
+                    case '':
+                    case null:
+                    case undefined:
+                        return html;
+                    default:
+                        return html += `<a href="${image}" target="_blank" class="thumbnails__thumb">
+                            <img src="${image}" alt="Картинка" class="thumbnails__thumb-img">
+                        </a>`
+                }   
+            }, '');
+        }
+
+        afterMount() {
+            this._thumbs = this.getContainer().querySelectorAll('.thumbnails__thumb');
+        
+            for (let index = 0; index < this._thumbs.length; index++) {
+                const thumb = this._thumbs[index];
+                this.subscribeTo(thumb, 'click', this.onPhotoClick.bind(this, index));      
+            }
+        }
+
+        onPhotoClick(index, event) {
+            event.preventDefault();
+            this.state.openPhoto({
+                numPhoto: index, 
+                photos: this.state.images
+            });
         }
     }
 
