@@ -8,6 +8,7 @@ define([
         constructor(options) {
             super(options);
             this.setState({
+                currentPerson: this.options.currentPerson,
                 person: this.options.person,
                 isSending: false,
                 isMyPage: this.options.isMyPage,
@@ -56,6 +57,8 @@ define([
             this.setState({ isSending: true });
             const message = await this.state.person.sendMessage(this.state.person.id, this.input.value);
             const post = this.childrens.create(Post, {
+                isMyPost: true,
+                idPost: message.id,
                 person: this.state.person,
                 message: message.message,
                 images: [message.image],
@@ -86,6 +89,8 @@ define([
             const children = messageData.messages.map((message) => {
                 const person = factory.create(PersonModel, message.author);
                 return this.childrens.create(Post, {
+                    isMyPost: person.id == this.state.currentPerson.id,
+                    idPost: message.id,
                     person: person,
                     message: message.message,
                     images: [message.image],

@@ -4,6 +4,8 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
         constructor(options) {
             super(options);
             this.setState({
+                idPost: this.options.idPost,
+                isMyPost: this.options.isMyPost,
                 person: this.options.person,
                 message: this.options.message,
                 images: this.options.images,
@@ -15,6 +17,7 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
             return {
                 images: [],
                 openPhoto: () => { },
+                isMyPost: false,
             };
         }
 
@@ -28,7 +31,7 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
                                 <a href="/user/${this.state.person.id}" class="post__author">${this.state.person.name || 'Неизвестный отправитель'}</a>
                                 <p class="post__date"></p>
                             </div>
-                            <img class="post__delete" src="/img/ui/garbage.png" alt="Удалить">
+                            ${this.state.isMyPost ? '<img class="post__delete" src="/img/ui/garbage.png" alt="Удалить">' : ''}
                         </div>
                         <div class="post__content">
                             <p class="post__text">${this.state.message || 'Пустое сообщение'}</p>
@@ -64,6 +67,11 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
                 const thumb = this._thumbs[index];
                 this.subscribeTo(thumb, 'click', this.onPhotoClick.bind(this, index));      
             }
+
+            if(this.state.isMyPost) {
+                this.deleteBtn = this.getContainer().querySelector('.post__delete');
+                this.subscribeTo(this.deleteBtn, 'click', this.deletePost.bind(this));
+            }
         }
 
         onPhotoClick(index, event) {
@@ -72,6 +80,11 @@ define(['js/components/Base/Component.js', 'js/components/Models/PersonModel.js'
                 numPhoto: index, 
                 photos: this.state.images
             });
+        }
+
+        async deletePost() {
+            await this.state.person.deleteMessage(this.state.idPost);
+            this.unmount();
         }
     }
 
