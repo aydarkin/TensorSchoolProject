@@ -27,7 +27,7 @@ define([
                     <div class="popup__close"></div>
                 </div>
                 <div class="popup__content">
-                    <div class="popup__title">${this.state.isMyPage ? 'Мои друзья' : 'Общие друзья' }</div>
+                    <div class="popup__title">Мои друзья</div>
                     <div class="friends"></div>
                 </div>
             </div>`;
