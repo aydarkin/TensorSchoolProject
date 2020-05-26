@@ -221,7 +221,7 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
          * @param {Number} page 
          * @param {Number} pageSize 
          */
-        async getLinksAsync(page = 0, pageSize = 30) {
+        async getLinksAsync(page = 0, pageSize = 100) {
             const result = await DataModule.getQuery('/user_link/list', {
                 page : page,
                 pageSize : pageSize,
@@ -230,8 +230,12 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
             const from = new Set();
             const to = new Set();
             result.user_links.forEach((user) => {
-                from.add(user.user_from);
-                to.add(user.user_to);
+                if(user.user_from != this.id) {
+                    from.add(user.user_from);
+                }
+                if(user.user_to != this.id) {
+                    to.add(user.user_to);
+                }   
             });
 
             const intersection = [...from].filter((id) => to.has(id));
@@ -278,6 +282,16 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
         }
 
         /**
+         * Удаление связи с другим пользователем
+         * @param {number} id 
+         */
+        async deleteLink(id) {
+            await DataModule.postQuery('/user_link/delete', {
+                user: id
+            }, 'application/x-www-form-urlencoded', false);
+        }
+
+        /**
          * Получение информации о пользователе
          * @param {Number} id - id получаемого пользователя
          */
@@ -308,6 +322,16 @@ define(['js/components/Base/Model.js', 'js/components/Base/DataModule.js'], func
             });
             message.author = JSON.parse(message.author.replace(new RegExp("'", 'g'), '"'));
             return message;
+        }
+
+        /**
+         * Удаление сообщения (своего)
+         * @param {number} id 
+         */
+        async deleteMessage(id) {
+            await DataModule.postQuery('/message/delete', {
+                message_id: id
+            }, 'application/x-www-form-urlencoded', false);
         }
 
         /**
