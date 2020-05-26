@@ -27,8 +27,7 @@ define([
             return `
             <div class="wrapper">
                 ${this.childrens.create(Header, {
-                    person: person,
-                    closeAction : person.logout.bind(person),
+                    person: person
                 })}
                 <main class="content content_messages">
                     ${this.childrens.create(Messages, {
