@@ -24,7 +24,7 @@ define(['js/components/Base/Component.js'], function(Component) {
             return `
             <div class="content__block profile-photos">
                 <div class="profile-photos__title">Фотографии</div>
-                <div class="profile-photos__content"></div>
+                <div class="profile-photos__content"><p class="profile-photos__empty">Возможно скоро тут появятся фото 😉</p></div>
             </div>`;
         }
 
@@ -52,7 +52,9 @@ define(['js/components/Base/Component.js'], function(Component) {
         async loadPhotos() {
             this.state.photos = await this.state.person.getPhotosAsync(this.state.person.id);
             const container = this.getContainer().querySelector('.profile-photos__content');
-            container.innerHTML = this.state.photos.slice(0, 4).map(photo => this.renderGalleryItem({photo})).join('\n');
+            if(this.state.photos.length > 0) {
+                container.innerHTML = this.state.photos.slice(0, 4).map(photo => this.renderGalleryItem({photo})).join('\n');
+            } 
             return this.state.photos;
         }
 

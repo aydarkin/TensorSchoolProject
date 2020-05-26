@@ -21,6 +21,10 @@ define([
         }
 
         render() {
+            let content = '<p class="popup__empty">Возможно скоро тут появятся фото 😉</p>';
+            if(this.state.photos.length > 0) {
+                content = this.state.photos.map(photo => this.renderPhoto(photo)).join('\n');
+            }
             return `
             <div class="popup popup_gallery">
                 <div class="popup__background "></div>
@@ -31,7 +35,7 @@ define([
                     <div class="popup__title">Фотографии</div>
                     ${this.state.isMyPage ? this.renderPhotoLoader() : ''}
                     <div class="popup__photos">
-                        ${this.state.photos.map(photo => this.renderPhoto(photo)).join('\n')}
+                        ${content}
                     </div>
                 </div>
             </div>`;

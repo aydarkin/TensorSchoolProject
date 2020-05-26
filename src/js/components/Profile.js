@@ -32,24 +32,25 @@ define(['js/components/Base/Component.js'], function(Component) {
         }
 
         renderView(person) {
+            const birth = `${person.birthDayString}, ${person.fullYears} годиков ${person.astrologicalSign.sign}`;
             return `
             <div class="content__block profile">
-                <p class="profile__title profile__title_nowrap">${person.name}</p>                        
+                <p class="profile__title profile__title_nowrap" title="${person.name}">${person.name}</p>                        
                 <div class="profile__info profile__info_short">
                     <p class="profile__description">${person.status}</p>
-                    <p class="profile__label">День рождения</p>
-                    <p class="profile__value">${person.birthDayString}, ${person.fullYears} годиков ${person.astrologicalSign.sign}</p>
-                    <p class="profile__label">Город</p>
-                    <p class="profile__value">${person.city}</p>
-                    <p class="profile__label">Семейное положение</p>
-                    <p class="profile__value">${person.civilStatus}</p>
+                    <p class="profile__label" title="День рождения">День рождения</p>
+                    <p class="profile__value" title="${birth}">${birth}</p>
+                    <p class="profile__label" title="Город">Город</p>
+                    <p class="profile__value" title="${person.city}">${person.city}</p>
+                    <p class="profile__label" title="Семейное положение">Семейное положение</p>
+                    <p class="profile__value" title="${person.civilStatus}">${person.civilStatus}</p>
                 </div>
                 <div class="profile__more">${this.state.isFull ? 'Скрыть' : 'Показать'} подробности</div>
                 <div class="profile__info profile__info_full ${this.state.isFull ? '' : 'profile__info_hide'}">
-                    <p class="profile__label">Образование</p>
-                    <p class="profile__value">${person.education}</p>
-                    <p class="profile__label">Место работы</p>
-                    <p class="profile__value">${person.job}</p>
+                    <p class="profile__label" title="Образование">Образование</p>
+                    <p class="profile__value" title="${person.education}">${person.education}</p>
+                    <p class="profile__label" title="Место работы">Место работы</p>
+                    <p class="profile__value" title="${person.job}">${person.job}</p>
                 </div>
             </div>
             `;
@@ -58,7 +59,7 @@ define(['js/components/Base/Component.js'], function(Component) {
         renderEdit(person) {
             return `
             <form class="content__block profile">
-                <p class="profile__title profile__title_nowrap">${person.name}</p>                        
+                <p class="profile__title profile__title_nowrap" title="${person.name}">${person.name}</p>                        
                 <div class="profile__info profile__info_short profile__info_editable">
                     <textarea name="status" id="" rows="1" class="profile__description profile__description_input">${person.status}</textarea>
                     <label for="value1" class="profile__label profile__label_input">День рождения</label>
