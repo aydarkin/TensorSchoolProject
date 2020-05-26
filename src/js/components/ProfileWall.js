@@ -17,7 +17,7 @@ define([
 
         render() {
             return `<div class="profile-wall">
-                        ${this.state.isMyPage ? this.renderCreaterPost() : ''}
+                        ${this.renderCreaterPost()}
                         <div class="profile-wall__posts"></div>
                     </div>`;
         }
@@ -25,7 +25,7 @@ define([
         renderCreaterPost() {
             return `<div class="content__block post-create">
                         <form class="post-create__form">
-                            <textarea class="post-create__text" name="text" id="" rows="2" placeholder="Что у вас нового?"></textarea>
+                            <textarea class="post-create__text" name="text" id="" rows="2" placeholder="${this.state.isMyPage ? 'Что у вас нового?' : 'Напишите что-нибудь...'}"></textarea>
                             <button class="post-create__send">Опубликовать</button>
                         </form>
                     </div>`;
@@ -44,22 +44,20 @@ define([
             this.clearPosts();
             this.loadPosts();
 
-            if(this.state.isMyPage) {
-                this.sendBtn = this.getContainer().querySelector('.post-create__send');
-                this.subscribeTo(this.sendBtn, 'click', this.clickSend.bind(this));
-    
-                this.input = this.getContainer().querySelector('.post-create__text');
-                this.subscribeTo(this.input, 'keydown', this.keyDown.bind(this));
-            }  
+            this.sendBtn = this.getContainer().querySelector('.post-create__send');
+            this.subscribeTo(this.sendBtn, 'click', this.clickSend.bind(this));
+
+            this.input = this.getContainer().querySelector('.post-create__text');
+            this.subscribeTo(this.input, 'keydown', this.keyDown.bind(this)); 
         }
 
         async createPost() {
             this.setState({ isSending: true });
-            const message = await this.state.person.sendMessage(this.state.person.id, this.input.value);
+            const message = await this.state.currentPerson.sendMessage(this.state.person.id, this.input.value);
             const post = this.childrens.create(Post, {
                 isMyPost: true,
                 idPost: message.id,
-                person: this.state.person,
+                person: this.state.currentPerson,
                 message: message.message,
                 images: [message.image],
                 openPhoto: this.options.openPhoto,
