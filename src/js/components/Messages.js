@@ -13,6 +13,7 @@ define([
                 selectedUserId : this.options.selectedUserId,
                 hasMoreMessages : false,
                 backAddress : this.options.backAddress,
+                mode: this.options.mode,
             });
         }
 
@@ -21,6 +22,7 @@ define([
                 selectedUserId : -1,
                 hasMoreMessages : false,
                 backAddress : '/',
+                mode: 'friends',
             }
         }
 
@@ -29,10 +31,16 @@ define([
             <div class="content__block messages">
                     <a href="/" class="messages__back">< Назад</a>
                     <div class="messages__title">Сообщения</div>
+                    <div class="messages__types">
+                        <div class="messages__type messages__type_friends ${this.state.mode == 'friends' ? 'messages__type_selected' : ''}">Друзья</div>
+                        <div class="messages__type messages__type_all ${this.state.mode == 'all' ? 'messages__type_selected' : ''}">Все пользователи</div>
+                    </div>
                     <div class="messages__content">
                         <div class="messages__user-list"></div>
                         <div class="messages__chat">
-                            <div class="messages__message-list"></div>
+                            <div class="messages__message-list">
+                                <div class="messages__empty">Выберите собеседника</div>
+                            </div>
                             <form class="messages__form">
                                 <textarea name="" id="" rows="1" class="messages__textarea"></textarea>
                                 <button class="messages__send messages__send" disabled>Отпр.</button>
@@ -44,6 +52,12 @@ define([
         }
 
         afterMount() {
+            this.friendBtn = this.getContainer().querySelector('.messages__type_friends');
+            this.subscribeTo(this.friendBtn, 'click', () => this.setMode('friends'));
+
+            this.allBtn = this.getContainer().querySelector('.messages__type_all');
+            this.subscribeTo(this.allBtn, 'click', () => this.setMode('all'));
+
             this.sendBtn = this.getContainer().querySelector('.messages__send');
             this.mountUsers();
             this.subscribeTo(this.sendBtn, 'click', this.clickSend.bind(this));
@@ -55,24 +69,46 @@ define([
             this.subscribeTo(this.btnBack, 'click', this.clickBack.bind(this));
         }
 
-        async mountUsers(page = 0, pageSize = 100) {
-            //получаем список связей
-            const links = await this.state.person.getLinksAsync(page, pageSize);
-            const children = [];
-            links.forEach((link) => {
-                children.push(this.childrens.create(User, {
-                    person: link.person,
-                    action : this.mountMessages.bind(this),
-                }));
+        setMode(mode) {
+            this.setState({
+                mode: mode,
+                selectedUserId: -1,
             });
+            this.update();
+        }
 
+        createUserComponent(person) {
+            return this.childrens.create(User, {
+                person: person,
+                action : this.mountMessages.bind(this),
+            })
+        }
+
+        async mountUsers(page = 0, pageSize = 100) {
+            const children = [];
+
+            if(this.state.mode == 'friends') {
+                //получаем список связей
+                const links = await this.state.person.getLinksAsync(page, pageSize);
+                links.forEach((link) => {
+                    children.push(this.createUserComponent(link.person));
+                });
+            }
+            if(this.state.mode == 'all') {
+                const all = await this.state.person.getAllUsers();
+                all.forEach((person) => {
+                    children.push(this.createUserComponent(person));
+                })
+            }
+            
             const userList = this.getContainer().querySelector('.messages__user-list');
             children.forEach(child => {
                 child.mount(userList);
             });
-            if(this.state.selectedUserId && selectedUserId >= 0){
+
+            if(this.state.selectedUserId && this.state.selectedUserId >= 0){
                 this.sendBtn.disabled = false;
-                mountMessages(this.state.selectedUserId);
+                this.mountMessages(this.state.selectedUserId);
             }
         }
 
@@ -106,6 +142,11 @@ define([
             });
 
             const messageList = this.getContainer().querySelector('.messages__message-list');
+            if(children.length > 0) {
+                messageList.innerHTML = '';
+            } else {
+                messageList.innerHTML = '<div class="messages__empty">😉Это начало истории вашего общения...</div>';
+            }
             children.forEach(child => {
                 child.mount(messageList);
             });
