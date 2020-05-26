@@ -93,7 +93,7 @@ define([
                             idPerson: person.id,
                             gallery: profileGallery,
                             openFriends: this.openPopup.bind(this, popupStack, PopupFriends, {
-                                person: this.state.person,
+                                person: this.state.currentPerson,
                                 isMyPage: this.state.isMyPage,
                             }),
                         })}

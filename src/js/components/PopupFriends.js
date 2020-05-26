@@ -19,7 +19,6 @@ define([
         }
 
         render() {
-            //let content = '<p class="popup__empty">Друзей пока нет, но не стоит отчаиваться 😉</p>';
             return `
             <div class="popup popup_friends">
                 <div class="popup__background"></div>
@@ -28,17 +27,22 @@ define([
                 </div>
                 <div class="popup__content">
                     <div class="popup__title">Мои друзья</div>
-                    <div class="friends"></div>
+                    <div class="friends">
+                        <p class="popup__empty">Друзей пока нет, но не стоит отчаиваться 😉</p>
+                    </div>
                 </div>
             </div>`;
         }
 
-        renderAction(type) {
+        renderAction(person, type) {
             let actionText;
             if(type === 'incoming') {
-                actionText = 'Принять заявку'
+                actionText = 'Принять запрос'
             }
-            return this.state.isMyPage && actionText ? `<div class="friends__action" data-id="${person.id}">${actionText}</div>` : '';
+            if(type === 'outgoing') {
+                actionText = 'Отменить запрос'
+            }
+            return actionText ? `<div class="friends__action" data-type="${type}" data-id="${person.id}">${actionText}</div>` : '';
         }
 
         async mountFriends(page = 0, pageSize = 100) {
@@ -46,6 +50,9 @@ define([
             const links = await this.state.person.getLinksAsync(page, pageSize);
             
             let elem, user;
+            if(links.length > 0) {
+                friends.innerHTML = '';
+            }
             links.forEach((link) => {
                 elem = document.createElement('div');
                 elem.className = 'friends__elem';
@@ -56,13 +63,18 @@ define([
                     action: (id) => { document.location = `/user/${id}` },
                 })
                 user.mount(elem);
-                elem.insertAdjacentHTML('beforeend', this.renderAction(link.type));
+                elem.insertAdjacentHTML('beforeend', this.renderAction(link.person, link.type));
             });
 
             const actions = this.getContainer().querySelectorAll('.friends__action');
             actions.forEach((action) => {
-                this.subscribeTo(action, 'click', this.acceptClick.bind(this, action));
+                this.subscribeTo(action, 'click', this.actionClick.bind(this, action));
             })
+        }
+
+        async rejectFriend(id) {
+            await this.state.person.deleteLink(id);
+            this.update();
         }
 
         async acceptFriend(id) {
@@ -70,8 +82,16 @@ define([
             this.update();
         }
 
-        acceptClick(button, event) {
-            this.acceptFriend(button.dataset.id);
+        actionClick(button, event) {
+            
+            switch (button.dataset.type) {
+                case 'incoming':
+                    this.acceptFriend(button.dataset.id);
+                    break;
+                case 'outgoing':
+                    this.rejectFriend(button.dataset.id);
+                    break;
+            }
         }
 
         afterMount() {

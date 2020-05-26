@@ -1188,8 +1188,8 @@ body{
 }
 
 .popup_friends .friends__action {
-    padding: 2px 8px;
-    margin: 0 2em;
+    padding: 2px 1em;
+    margin: 2px 2em 1em;
     border: 1px solid #4a76a8;
     border-radius: 1em;
     max-width: 160px;
