@@ -12,10 +12,11 @@ define([
     'js/components/PopupViewPhoto.js',
     'js/components/PopupGallery.js',
     'js/components/PopupFriends.js',
+    'js/components/FriendStatus.js',
     'js/components/Models/PersonModel.js',
 ], function(Component, Header, Profile, ProfileGallery, ProfileWall, ProfilePhoto, 
             ProfileNavigator, ProfileMessages, Footer, PopupStack, PopupViewPhoto, 
-            PopupGallery, PopupFriends, PersonModel) {
+            PopupGallery, PopupFriends, FriendStatus, PersonModel) {
     'use strict';
     /**
      * Страница пользователя
@@ -72,6 +73,7 @@ define([
                         ${profile}
                         ${profileGallery}
                         ${this.childrens.create(ProfileWall, {
+                            currentPerson: this.state.currentPerson,
                             person: person,
                             openPhoto: this.openPopup.bind(this, popupStack, PopupViewPhoto),
                             isMyPage: this.state.isMyPage,
@@ -83,6 +85,10 @@ define([
                             openPhoto: this.openPopup.bind(this, popupStack, PopupViewPhoto),
                             isMyPage: this.state.isMyPage,
                         })}
+                        ${!this.state.isMyPage ? this.childrens.create(FriendStatus, {
+                            currentPerson: this.state.currentPerson,
+                            person: person,
+                        }) : ''}
                         ${this.childrens.create(ProfileNavigator, {
                             idPerson: person.id,
                             gallery: profileGallery,

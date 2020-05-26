@@ -1163,3 +1163,29 @@ body{
     color: white;
     background-color: #4a76a8;
 }
+
+/* Блок статуса дружбы */
+.friend-status {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend-status__info,
+.friend-status__action {
+    text-align: center;
+}
+
+.friend-status__action {
+    margin-top: 1em;
+    line-height: 2em;
+    padding: 0 1em;
+    color: white;
+    background-color: #4a76a8;
+    border-radius: 1em;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.friend-status__action:hover {
+    background-color: #406590;
+}
