@@ -27,10 +27,10 @@ define(['js/components/Base/Component.js'], function(Component) {
                     <p class="profile-navigation__item-name">Интересное</p>
                 </a>
                 <a href="" class="profile-navigation__item">
-                    <img src="/img/ui/friends.png" alt="Товарищи" class="profile-navigation__img profile-navigation__img_round">
-                    <p class="profile-navigation__item-name">Товарищи</p>
+                    <img src="/img/ui/friends.png" alt="Друзья" class="profile-navigation__img profile-navigation__img_round">
+                    <p class="profile-navigation__item-name">Друзья</p>
                 </a>
-                <a href="" class="profile-navigation__item">
+                <a href="https://yummyanime.club/" class="profile-navigation__item">
                     <img src="/img/ui/video.png" alt="Видеотека" class="profile-navigation__img profile-navigation__img_round">
                     <p class="profile-navigation__item-name">Видеотека</p>
                 </a>
@@ -38,7 +38,7 @@ define(['js/components/Base/Component.js'], function(Component) {
                     <img src="/img/ui/photo.png" alt="Фото" class="profile-navigation__img profile-navigation__img_round">
                     <p class="profile-navigation__item-name">Фото</p>
                 </a>
-                <a href="" class="profile-navigation__item">
+                <a href="https://music.yandex.ru/" class="profile-navigation__item">
                     <img src="/img/ui/music.png" alt="Музыка" class="profile-navigation__img profile-navigation__img_round">
                     <p class="profile-navigation__item-name">Музыка</p>
                 </a>
