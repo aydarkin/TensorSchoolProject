@@ -1,7 +1,7 @@
 define(function () {
     'use strict';
     class DataModule {
-        static domain = 'http://tensor-school.herokuapp.com';
+        static domain = 'https://tensor-school.herokuapp.com';
         
         static async query(relativeURL, method, contentType, body, waitResult = true) {
             let params = {
