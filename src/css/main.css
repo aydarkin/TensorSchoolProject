@@ -79,6 +79,7 @@ body{
 
 .top-profile__name {
     padding-right: 10px;
+    white-space: nowrap;
 }
 
 .top-profile__img {
@@ -225,6 +226,8 @@ body{
 .profile__description {
     grid-column: 1 / 3;
     margin: 0 0 16px;
+
+    word-wrap: break-word;
 }
 
 .profile__label,
@@ -857,6 +860,38 @@ body{
     margin: 0 16px;
 }
 
+.messages__types {
+    display: flex;
+}
+
+.messages__types {
+    margin: 0 16px 8px;
+}
+
+.messages__type {
+    line-height: 1.6em;
+    font-size: .8em;
+    padding: 0 .8em;
+    border: 1px solid #4a76a8;
+    border-radius: .8em;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.messages__type:hover {
+    background-color: #4a76a8;
+    color: white;
+}
+
+.messages__type_selected {
+    background-color: #4a76a8;
+    color: white;
+}
+
+.messages__type_selected:hover {
+    background-color: #395a80;
+}
+
 .messages__content {
     width: 100%;
     flex-grow: 1;
@@ -944,6 +979,11 @@ body{
 
     display: flex;
     flex-direction: column-reverse;
+}
+
+.messages__empty {
+    padding: 1em 2em;
+    text-align: center;
 }
 
 .messages .message {
