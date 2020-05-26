@@ -54,7 +54,7 @@ define([
         renderPhoto(photo) {
             return `
             <a href="${photo}" target="_blank" class="popup__image">
-                <div class="popup__delete-photo">x</div>
+                ${this.state.isMyPage ? '<div class="popup__delete-photo">x</div>' : ''}
                 <img src="${photo}" alt="Фото" class="popup__img" />
             </a>`;
         }
@@ -69,15 +69,17 @@ define([
                 const thumb = this._thumbs[index];
                 this.subscribeTo(thumb, 'click', this.onPhotoClick.bind(this, index)); 
                 
-                const deleteBtn = thumb.querySelector('.popup__delete-photo');
-                const id = thumb.querySelector('.popup__img').src.split('/').pop();
-                this.subscribeTo(deleteBtn, 'click', this.deletePhoto.bind(this, id)); 
+                if(this.state.isMyPage) {
+                    const deleteBtn = thumb.querySelector('.popup__delete-photo');
+                    const id = thumb.querySelector('.popup__img').src.split('/').pop();
+                    this.subscribeTo(deleteBtn, 'click', this.deletePhoto.bind(this, id)); 
+                }   
             }
 
-            this._uploadBtn = this.getContainer().querySelector('.popup__photo-file');
-            if(this._uploadBtn) {
+            if(this.state.isMyPage) {
+                this._uploadBtn = this.getContainer().querySelector('.popup__photo-file');
                 this.subscribeTo(this._uploadBtn, 'change', this.uploadPhoto.bind(this));
-            } 
+            }
         }
         
         onPhotoClick(index, event) {
