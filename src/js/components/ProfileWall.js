@@ -10,18 +10,23 @@ define([
             this.setState({
                 person: this.options.person,
                 isSending: false,
+                isMyPage: this.options.isMyPage,
             })
         }
 
         render() {
             return `<div class="profile-wall">
-                        <div class="content__block post-create">
-                            <form class="post-create__form">
-                                <textarea class="post-create__text" name="text" id="" rows="2" placeholder="Что у вас нового?"></textarea>
-                                <button class="post-create__send">Опубликовать</button>
-                            </form>
-                        </div>
+                        ${this.state.isMyPage ? this.renderCreaterPost() : ''}
                         <div class="profile-wall__posts"></div>
+                    </div>`;
+        }
+
+        renderCreaterPost() {
+            return `<div class="content__block post-create">
+                        <form class="post-create__form">
+                            <textarea class="post-create__text" name="text" id="" rows="2" placeholder="Что у вас нового?"></textarea>
+                            <button class="post-create__send">Опубликовать</button>
+                        </form>
                     </div>`;
         }
 
@@ -38,11 +43,13 @@ define([
             this.clearPosts();
             this.loadPosts();
 
-            this.sendBtn = this.getContainer().querySelector('.post-create__send');
-            this.subscribeTo(this.sendBtn, 'click', this.clickSend.bind(this));
-
-            this.input = this.getContainer().querySelector('.post-create__text');
-            this.subscribeTo(this.input, 'keydown', this.keyDown.bind(this));
+            if(this.state.isMyPage) {
+                this.sendBtn = this.getContainer().querySelector('.post-create__send');
+                this.subscribeTo(this.sendBtn, 'click', this.clickSend.bind(this));
+    
+                this.input = this.getContainer().querySelector('.post-create__text');
+                this.subscribeTo(this.input, 'keydown', this.keyDown.bind(this));
+            }  
         }
 
         async createPost() {
