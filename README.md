@@ -23,3 +23,5 @@
 Запускаем сервер
 
     node server
+# Документация к API
+https://app.swaggerhub.com/apis/TensorSchool/
